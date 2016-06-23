@@ -1,0 +1,91 @@
+#include "game_state.hpp"
+#include "game_level_state.hpp"
+#include "main_menu_state.hpp"
+#include "map.hpp"
+
+
+void GameLevel::init() {
+	this->game->window.clear(sf::Color::Black);
+	this->game->background.setTexture(this->game->texmgr.getRef("background"));
+	this->game->window.draw(this->game->background);
+	map.draw(this->game->window);
+	
+}
+void GameLevel::cleanUp() {}
+void GameLevel::pause() {}
+void GameLevel::resume() {}
+
+void GameLevel::draw(const float dt) {
+	this->game->window.clear(sf::Color::Black);	
+	this->game->window.draw(this->game->background);	
+	map.draw(this->game->window);
+	return;
+}
+
+void GameLevel::update(sf::Clock& clock) {
+	/*Check Game Over*/
+	if (this->map.gameOver) {
+		this->game->changeState(new MainMenu(this->game));
+
+	}
+
+	float dt = clock.getElapsedTime().asSeconds();
+	if (dt > this->game->gameSpeed) {
+		this->map.enemyMove();
+	}
+
+	
+	
+	return;
+}
+
+void GameLevel::eventHandler() {
+	sf::Event event;
+
+	while (this->game->window.pollEvent(event)) {
+		
+		switch (event.type) {
+
+			/*Window closed*/
+		case sf::Event::Closed: {
+			game->window.close();
+			break;
+		}
+
+		/*Key Pressed*/
+		case sf::Event::KeyPressed: {
+			if (event.key.code == sf::Keyboard::Escape) {
+				game->window.close();
+				break;
+			}
+			if (event.key.code == sf::Keyboard::Q) {
+				this->game->changeState(new MainMenu(this->game));
+				break;
+			}
+
+			if (event.key.code == sf::Keyboard::W || event.key.code == sf::Keyboard::A ||
+				event.key.code == sf::Keyboard::S || event.key.code == sf::Keyboard::D) {
+				sf::Keyboard::Key k = event.key.code;
+				this->map.playerMove(k);				
+			}				
+		}								
+		default:
+			break;
+		}
+
+	}
+
+}
+
+GameLevel::GameLevel(Game* game) {
+	this->game = game;
+	sf::Vector2f pos = sf::Vector2f(this->game->window.getSize());
+	this->hudView.setSize(pos);
+	this->levelView.setSize(pos);
+	pos *= 0.5f;
+	this->hudView.setCenter(pos);
+	this->levelView.setCenter(pos);
+
+	map = Map("assets/test.dat", 15,15,32, game->tileAtlas, this->game);
+
+}

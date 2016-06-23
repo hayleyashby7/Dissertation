@@ -1,0 +1,67 @@
+#include "game_level_state.hpp"
+#include "game_state.hpp"
+#include "main_menu_state.hpp"
+
+
+void MainMenu::init() {
+	this->game->window.clear(sf::Color::Black);
+	this->game->background.setTexture(this->game->texmgr.getRef("background"));
+	this->game->window.draw(this->game->background);
+}
+void MainMenu::cleanUp() {}
+void MainMenu::pause() {}
+void MainMenu::resume() {}
+
+void MainMenu::draw(const float dt) {
+	this->game->window.setView(this->menuView);
+
+	this->game->window.clear(sf::Color::Black);
+
+	this->game->window.draw(this->game->background);
+
+	return;
+}
+
+void MainMenu::update(sf::Clock& clock) {
+
+}
+
+void MainMenu::eventHandler() {
+	sf::Event event;
+
+	while (this->game->window.pollEvent(event)) {
+		switch (event.type){
+		
+		/*Window closed*/
+		case sf::Event::Closed: {
+			game->window.close();
+			break;
+		}		
+
+		/*Key Pressed*/
+		case sf::Event::KeyPressed: {
+			if (event.key.code == sf::Keyboard::Escape) {
+				game->window.close();
+				break;
+			}
+
+			if (event.key.code == sf::Keyboard::S) {
+				this->game->changeState(new GameLevel(this->game));
+				break;
+			}
+		}
+
+		default:
+			break;
+		}
+
+	}
+}
+
+MainMenu::MainMenu(Game* game) {
+	this->game = game;
+	sf::Vector2f pos = sf::Vector2f(this->game->window.getSize());
+	this->menuView.setSize(pos);
+	pos *= 0.5f;
+	this->menuView.setCenter(pos);
+}
