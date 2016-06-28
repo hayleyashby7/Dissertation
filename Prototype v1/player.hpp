@@ -7,13 +7,14 @@
 
 
 class Player : public Entity {
-private:
-	int health;
+
 public:
 	//player movement
 	int moveSpeed;
 	sf::Vector2f movePosition(sf::Keyboard::Key& dirKey);
 
+	int health;
+	std::string getHealth();
 	void takeDamage();
 	bool isDead();
 

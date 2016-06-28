@@ -19,6 +19,7 @@ void GameLevel::draw(const float dt) {
 	this->game->window.clear(sf::Color::Black);	
 	this->game->window.draw(this->game->background);	
 	map.draw(this->game->window);
+	gui.draw(this->game->window);
 	return;
 }
 
@@ -32,9 +33,10 @@ void GameLevel::update(sf::Clock& clock) {
 	float dt = clock.getElapsedTime().asSeconds();
 	if (dt > this->game->gameSpeed) {
 		this->map.enemyMove();
-	}
-
-	
+		if (this->map.playerHit) {
+			this->gui.update("player", this->map.player.getHealth());
+		}
+	}	
 	
 	return;
 }
@@ -79,13 +81,6 @@ void GameLevel::eventHandler() {
 
 GameLevel::GameLevel(Game* game) {
 	this->game = game;
-	sf::Vector2f pos = sf::Vector2f(this->game->window.getSize());
-	this->hudView.setSize(pos);
-	this->levelView.setSize(pos);
-	pos *= 0.5f;
-	this->hudView.setCenter(pos);
-	this->levelView.setCenter(pos);
-
 	map = Map("assets/test.dat", 15,15,32, game->tileAtlas, this->game);
 
 }

@@ -101,7 +101,7 @@ Game::Game(){
 	this->loadTiles();
 	//this->loadEntities();
 
-	this->window.create(sf::VideoMode(800, 600), "Prototype!", sf::Style::Titlebar | sf::Style::Close);
+	this->window.create(sf::VideoMode(700, 550), "Prototype!", sf::Style::Titlebar | sf::Style::Close);
 	this->window.setFramerateLimit(60);
 
 	this->background.setTexture(this->texmgr.getRef("background"));

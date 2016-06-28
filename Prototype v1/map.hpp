@@ -32,10 +32,9 @@ public:
 
 	void playerMove(sf::Keyboard::Key& dirKey);
 	void enemyMove();
-
-
 	bool checkCollision(sf::Vector2f position, Map* map, Entity movingEntity);
 	bool gameOver;
+	bool playerHit;
 
 	void draw(sf::RenderWindow& window);
 
@@ -44,6 +43,7 @@ public:
 		this->height = 0;
 		this->tileSize = 0;
 		this->gameOver = false;
+		this->playerHit = false;
 	}
 
 	Map(const std::string& filename, unsigned int width, unsigned int height, unsigned int tileSize, 

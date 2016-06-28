@@ -5,14 +5,15 @@
 
 #include "game_state.hpp"
 #include "map.hpp"
+#include "gui.hpp"
 
 
 class GameLevel : public GameState {
 private:
-	sf::View levelView;
-	sf::View hudView;
+
 
 	Map map;
+	Gui gui;
 
 public:
 	virtual void init();

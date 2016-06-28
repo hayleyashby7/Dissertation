@@ -28,8 +28,14 @@ void Player::takeDamage() {
 	this->health -= 25;
 }
 
+std::string Player::getHealth() {
+	std::string healthNum = std::to_string(this->health);
+	return healthNum;
+}
+
 bool Player::isDead() {
-	if (this->health < 0) {
+	if (this->health <= 0) {
 		return true;
 	}
+	return false;
 }

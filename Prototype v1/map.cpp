@@ -85,7 +85,8 @@ bool Map::checkCollision(sf::Vector2f position, Map* map, Entity movingEntity) {
 		if (movingEntity.type == Entity::entityType::ENEMY
 			&& movingEntity.getPosition() == player.getPosition()) {
 			player.takeDamage();
-			this->gameOver = player.isDead();
+			playerHit = true;
+			gameOver = player.isDead();
 		}
 		return false;
 }
