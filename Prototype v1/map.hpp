@@ -24,17 +24,16 @@ public:
 	
 	std::vector<Cell> mapCells;
 
-	Player player;
 	std::vector<Enemy> enemies;
 
 	void loadMap(const std::string& filename, unsigned int width, unsigned int height, 
-		std::map<std::string, Tile>& enemyAtlas, Game* thisGame);
+		std::map<std::string, Tile>& enemyAtlas, Game* game, Player& player);
 
-	void playerMove(sf::Keyboard::Key& dirKey);
+	
 	void enemyMove();
-	bool checkCollision(sf::Vector2f position, Map* map, Entity movingEntity);
-	bool gameOver;
-	bool playerHit;
+	bool checkCollision(sf::Vector2f position, Entity movingEntity);
+	bool damageDone(sf::Vector2f playerPos);
+
 
 	void draw(sf::RenderWindow& window);
 
@@ -42,17 +41,14 @@ public:
 		this->width = 0;
 		this->height = 0;
 		this->tileSize = 0;
-		this->gameOver = false;
-		this->playerHit = false;
 	}
 
-	Map(const std::string& filename, unsigned int width, unsigned int height, unsigned int tileSize, 
-		std::map<std::string, Tile>& tileAtlas, Game* game) {
+	Map(const std::string& filename, unsigned int width, unsigned int height, unsigned int tileSize,
+		std::map<std::string, Tile>& tileAtlas, Game* game, Player& player) {
 		this->width = width;
 		this->height = height;
 		this->tileSize = tileSize;
-		loadMap(filename, width, height, tileAtlas, game);
-		this->gameOver = false;
+		loadMap(filename, width, height, tileAtlas, game, player);
 	}
 };
 

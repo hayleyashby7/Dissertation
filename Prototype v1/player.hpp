@@ -12,6 +12,7 @@ public:
 	//player movement
 	int moveSpeed;
 	sf::Vector2f movePosition(sf::Keyboard::Key& dirKey);
+	void setPosition(sf::Vector2f position);
 
 	int health;
 	std::string getHealth();

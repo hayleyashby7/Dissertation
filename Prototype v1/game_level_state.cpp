@@ -20,12 +20,13 @@ void GameLevel::draw(const float dt) {
 	this->game->window.draw(this->game->background);	
 	map.draw(this->game->window);
 	gui.draw(this->game->window);
+	player.draw(this->game->window);
 	return;
 }
 
 void GameLevel::update(sf::Clock& clock) {
 	/*Check Game Over*/
-	if (this->map.gameOver) {
+	if (this->gameOver) {
 		this->game->changeState(new MainMenu(this->game));
 
 	}
@@ -33,8 +34,9 @@ void GameLevel::update(sf::Clock& clock) {
 	float dt = clock.getElapsedTime().asSeconds();
 	if (dt > this->game->gameSpeed) {
 		this->map.enemyMove();
-		if (this->map.playerHit) {
-			this->gui.update("player", this->map.player.getHealth());
+		if (this->playerHit) {
+			this->gui.update("player", this->player.getHealth());
+			this->playerHit = false;
 		}
 	}	
 	
@@ -68,7 +70,7 @@ void GameLevel::eventHandler() {
 			if (event.key.code == sf::Keyboard::W || event.key.code == sf::Keyboard::A ||
 				event.key.code == sf::Keyboard::S || event.key.code == sf::Keyboard::D) {
 				sf::Keyboard::Key k = event.key.code;
-				this->map.playerMove(k);				
+				this->playerMove(k);				
 			}				
 		}								
 		default:
@@ -79,8 +81,24 @@ void GameLevel::eventHandler() {
 
 }
 
+void GameLevel::playerMove(sf::Keyboard::Key& dirKey) {
+	sf::Vector2f newPos = player.movePosition(dirKey);
+	if (!map.checkCollision(newPos, player)) {
+		player.updatePos(newPos);
+	}
+	if (map.damageDone(player.getPosition())) {
+		player.takeDamage();
+		playerHit = true;
+		gameOver = player.isDead();
+	}
+}
+
+
+
 GameLevel::GameLevel(Game* game) {
+	player = Player(sf::Vector2f(0, 0), game->texmgr.getRef("player"));
 	this->game = game;
-	map = Map("assets/test.dat", 15,15,32, game->tileAtlas, this->game);
+	this->player = player;
+	map = Map("assets/maze.dat", 15,15,32, game->tileAtlas, game, player);
 
 }

@@ -9,8 +9,8 @@ class Cell {
 public:
 	std::vector<Entity> cellContents;
 
-	int cellX;
-	int cellY;
+	float cellX;
+	float cellY;
 	int tileSize = 32;
 
 	sf::Vector2f getPosition() {
@@ -19,7 +19,7 @@ public:
 		position.y = cellY * tileSize;
 	}
 
-	Cell(const int& x, const int& y) {
+	Cell(const float& x, const float& y) {
 		this->cellX = x;
 		this->cellY = y;
 	}

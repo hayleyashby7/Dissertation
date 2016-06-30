@@ -24,6 +24,11 @@ sf::Vector2f Player::movePosition(sf::Keyboard::Key& dirKey) {
 	return newPos;
 }
 
+void Player::setPosition(sf::Vector2f position) {
+	this->sprite.setPosition(position);
+	return;
+}
+
 void Player::takeDamage() {
 	this->health -= 25;
 }

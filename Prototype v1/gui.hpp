@@ -26,27 +26,30 @@ public:
 
 	Gui() {
 		font.loadFromFile("assets/Augusta.ttf");
-		this->guiText["player"] = playerStatus;
-		this->guiText["key"] = numOfKeys;
-		this->guiText["level"] = levelNumber;
+		gameCode.setString("Code: ");
+		levelNumber.setString("Level: ");
+		numOfKeys.setString("Keys Gathered: " + 0);
+		playerStatus.setString("Health: " + 100);
+
 		this->guiText["code"] = gameCode;
-		
+		this->guiText["level"] = levelNumber;
+		this->guiText["key"] = numOfKeys;
+		this->guiText["player"] = playerStatus;
 		
 		guiStart.x = 525;
 		guiStart.y = 25;		
 
-		int i = 1;
+		int i = 0;
 		for (auto &text : this->guiText) {
 			float x = guiStart.x;
-			float y = guiStart.y + (i * 100);			
+			float y = guiStart.y + (i * 100);
 			text.second.setPosition(x, y);
 			text.second.setFont(font);
 			text.second.setColor(sf::Color::White);
-			text.second.setString("test");
 			text.second.setCharacterSize(20);
 			i++;
 		}
-	};	
+	};
 };
 
 #endif // !GUI_HPP

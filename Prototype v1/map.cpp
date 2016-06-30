@@ -2,7 +2,7 @@
 
 
 void Map::loadMap(const std::string& filename,unsigned int width, unsigned int height, 
-	std::map<std::string, Tile>& entityAtlas, Game* game) {
+	std::map<std::string, Tile>& entityAtlas, Game* game, Player& player) {
 	int totalSize = width * height;	
 	std::ifstream input;
 	input.open(filename);
@@ -11,7 +11,7 @@ void Map::loadMap(const std::string& filename,unsigned int width, unsigned int h
 
 	for (int i = 0; i <totalSize; i++)	
 	{
-		currentX = i % width;
+		currentX = i % width + 1;
 		if (i % height == 0) currentY++;
 
 		Cell cell(currentX, currentY);	
@@ -25,16 +25,22 @@ void Map::loadMap(const std::string& filename,unsigned int width, unsigned int h
 		case '1':
 			cell.cellContents.push_back(entityAtlas.at("wall"));
 			break;
-		case '2': 
-			player = Player(sf::Vector2f(currentX * this->tileSize, currentY* this->tileSize), game->texmgr.getRef("player"));			
-			cell.cellContents.push_back(entityAtlas.at("floor"));					
-			break;
-		case '3':{
+		case '2': {
 			Enemy enemy = Enemy(sf::Vector2f(currentX * this->tileSize, currentY* this->tileSize), game->texmgr.getRef("enemy"));
-			
+
 			enemies.push_back(enemy);
 			cell.cellContents.push_back(entityAtlas.at("floor"));
 		}
+		case '3':
+			//pickup
+
+		case '4': 
+			player.setPosition(sf::Vector2f(currentX * this->tileSize, currentY* this->tileSize));
+			cell.cellContents.push_back(entityAtlas.at("floor"));					
+			break;
+		case '5':
+			//exit
+		
 		default:
 			break;
 		}
@@ -45,18 +51,10 @@ void Map::loadMap(const std::string& filename,unsigned int width, unsigned int h
 	return;
 }
 
-void Map::playerMove(sf::Keyboard::Key& dirKey) {	
-	sf::Vector2f newPos = player.movePosition(dirKey);
-	if (!checkCollision(newPos, this, player)) {
-		player.updatePos(newPos);
-	}
-	
-}
-
 void Map::enemyMove() {
 	for (auto &enemy : this->enemies) {
 		sf::Vector2f newEnemyPos = enemy.movePosition(enemy.enemyDirection);
-		if (!checkCollision(newEnemyPos, this, enemy)) {
+		if (!checkCollision(newEnemyPos, enemy)) {
 			enemy.updatePos(newEnemyPos);
 		}
 		else {
@@ -65,30 +63,41 @@ void Map::enemyMove() {
 	}
 }
 
-bool Map::checkCollision(sf::Vector2f position, Map* map, Entity movingEntity) {
+bool Map::checkCollision(sf::Vector2f position, Entity movingEntity) {
 	position.x = position.x / tileSize;
 	position.y = position.y / tileSize;
 
-		for (auto &cell : map->mapCells) {
-			if (cell.cellX == position.x && cell.cellY == position.y) {
-				for (auto &content : cell.cellContents) {					
-					if (content.type == Entity::entityType::WALL) {						
-						return true;
-					}
-					if (movingEntity.type == Entity::entityType::PLAYER
-						&& content.type == Entity::entityType::PICKUP) {
-						//PICKUP
-					}
+	//check out of bounds
+	if (position.x <=0 || position.x > 15
+		|| position.y <= 0 || position.y > 15) {
+		return true;
+	}
+	
+	//check collisions within map
+	for (auto &cell : this->mapCells) {
+		if (cell.cellX == position.x && cell.cellY == position.y) {
+			for (auto &content : cell.cellContents) {					
+				if (content.type == Entity::entityType::WALL) {						
+					return true;
+				}
+				if (movingEntity.type == Entity::entityType::PLAYER
+					&& content.type == Entity::entityType::PICKUP) {
+					//PICKUP
 				}
 			}
 		}
-		if (movingEntity.type == Entity::entityType::ENEMY
-			&& movingEntity.getPosition() == player.getPosition()) {
-			player.takeDamage();
-			playerHit = true;
-			gameOver = player.isDead();
+	}
+	return false;
+}
+
+bool Map::damageDone(sf::Vector2f playerPos) {
+	for (auto &enemy : this->enemies) {
+		if (enemy.getPosition() == playerPos) {
+			return true;
 		}
-		return false;
+	
+	}
+	return false;
 }
 
 void Map::draw(sf::RenderWindow& window) {
@@ -105,5 +114,5 @@ void Map::draw(sf::RenderWindow& window) {
 	for (auto &enemy : this->enemies) {
 		enemy.draw(window);
 	}	
-	player.draw(window);	
+	//
 }
