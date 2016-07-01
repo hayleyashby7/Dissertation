@@ -26,17 +26,19 @@ public:
 
 	Gui() {
 		font.loadFromFile("assets/Augusta.ttf");
-		gameCode.setString("Code: ");
-		levelNumber.setString("Level: ");
-		numOfKeys.setString("Keys Gathered: " + 0);
-		playerStatus.setString("Health: " + 100);
-
+		
 		this->guiText["code"] = gameCode;
 		this->guiText["level"] = levelNumber;
 		this->guiText["key"] = numOfKeys;
 		this->guiText["player"] = playerStatus;
+
+		guiText["code"].setString("Code: ");
+		guiText["level"].setString("Level: ");
+		guiText["key"].setString("Keys Gathered: 0");
+		guiText["player"].setString("Health: 100");
+
 		
-		guiStart.x = 525;
+		guiStart.x = 557;
 		guiStart.y = 25;		
 
 		int i = 0;

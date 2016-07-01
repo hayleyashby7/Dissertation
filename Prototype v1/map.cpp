@@ -33,6 +33,7 @@ void Map::loadMap(const std::string& filename,unsigned int width, unsigned int h
 		}
 		case '3':
 			//pickup
+			cell.cellContents.push_back(entityAtlas.at("floor"));
 
 		case '4': 
 			player.setPosition(sf::Vector2f(currentX * this->tileSize, currentY* this->tileSize));
@@ -40,6 +41,7 @@ void Map::loadMap(const std::string& filename,unsigned int width, unsigned int h
 			break;
 		case '5':
 			//exit
+			cell.cellContents.push_back(entityAtlas.at("floor"));
 		
 		default:
 			break;
@@ -51,11 +53,14 @@ void Map::loadMap(const std::string& filename,unsigned int width, unsigned int h
 	return;
 }
 
-void Map::enemyMove() {
+void Map::enemyMove(Player &player) {
 	for (auto &enemy : this->enemies) {
 		sf::Vector2f newEnemyPos = enemy.movePosition(enemy.enemyDirection);
 		if (!checkCollision(newEnemyPos, enemy)) {
 			enemy.updatePos(newEnemyPos);
+			if (newEnemyPos == player.getPosition()) {
+				player.takeDamage();
+			}
 		}
 		else {
 			enemy.changeDirection();
@@ -84,18 +89,17 @@ bool Map::checkCollision(sf::Vector2f position, Entity movingEntity) {
 					&& content.type == Entity::entityType::PICKUP) {
 					//PICKUP
 				}
+				
+				}
 			}
 		}
-	}
-	return false;
-}
+	if (movingEntity.type == Entity::entityType::PLAYER) {
+		for (auto &enemy : this->enemies) {
+			if (enemy.getPosition() == movingEntity.getPosition()) {
+				movingEntity.takeDamage();
+			}
 
-bool Map::damageDone(sf::Vector2f playerPos) {
-	for (auto &enemy : this->enemies) {
-		if (enemy.getPosition() == playerPos) {
-			return true;
 		}
-	
 	}
 	return false;
 }

@@ -14,11 +14,13 @@ public:
 	sf::Vector2f movePosition(sf::Keyboard::Key& dirKey);
 	void setPosition(sf::Vector2f position);
 
+	bool beenHit;
 	int health;
+	int keys;
 	std::string getHealth();
 	void takeDamage();
 	bool isDead();
-
+	
 
 	Player(){}
 
@@ -26,6 +28,7 @@ public:
 		this->isSolid = true;
 		this->type = entityType::PLAYER;
 		this->health = 100;
+		this->beenHit = false;
 		this->sprite.setOrigin(sf::Vector2f(0.0f, 0.0f));
 		this->sprite.setPosition(initialPos);
 		this->sprite.setTexture(texture);

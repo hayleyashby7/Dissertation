@@ -31,13 +31,15 @@ void GameLevel::update(sf::Clock& clock) {
 
 	}
 
+	/*Enemy movement*/
 	float dt = clock.getElapsedTime().asSeconds();
 	if (dt > this->game->gameSpeed) {
-		this->map.enemyMove();
-		if (this->playerHit) {
-			this->gui.update("player", this->player.getHealth());
-			this->playerHit = false;
+		this->map.enemyMove(player);
+		if (this->player.beenHit) {
+			this->gui.update("player", "Health: " + this->player.getHealth());			
 		}
+		gameOver = player.isDead();
+		this->player.beenHit = false;
 	}	
 	
 	return;
@@ -86,19 +88,24 @@ void GameLevel::playerMove(sf::Keyboard::Key& dirKey) {
 	if (!map.checkCollision(newPos, player)) {
 		player.updatePos(newPos);
 	}
-	if (map.damageDone(player.getPosition())) {
-		player.takeDamage();
-		playerHit = true;
-		gameOver = player.isDead();
+	if (this->player.beenHit) {
+		this->gui.update("player", "Health: " + this->player.getHealth());
+		
 	}
-}
+	gameOver = player.isDead();
+	this->player.beenHit = false;
 
+}
 
 
 GameLevel::GameLevel(Game* game) {
 	player = Player(sf::Vector2f(0, 0), game->texmgr.getRef("player"));
 	this->game = game;
 	this->player = player;
+
+	int mapChoice = rand();
+
+
 	map = Map("assets/maze.dat", 15,15,32, game->tileAtlas, game, player);
 
 }

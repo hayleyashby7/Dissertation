@@ -31,7 +31,7 @@ public:
 		sf::Vector2f position = this->sprite.getPosition();
 		return position;
 	}
-	
+	virtual void takeDamage() {};
 
 protected:
 	Entity() {};

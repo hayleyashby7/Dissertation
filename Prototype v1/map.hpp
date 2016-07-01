@@ -30,10 +30,8 @@ public:
 		std::map<std::string, Tile>& enemyAtlas, Game* game, Player& player);
 
 	
-	void enemyMove();
+	void enemyMove(Player& player);
 	bool checkCollision(sf::Vector2f position, Entity movingEntity);
-	bool damageDone(sf::Vector2f playerPos);
-
 
 	void draw(sf::RenderWindow& window);
 

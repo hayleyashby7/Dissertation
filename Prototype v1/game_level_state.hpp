@@ -18,7 +18,6 @@ private:
 public:
 	Player player;
 	bool gameOver;
-	bool playerHit;
 
 	void playerMove(sf::Keyboard::Key& dirKey);
 	
