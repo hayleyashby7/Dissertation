@@ -2,6 +2,8 @@
 #define GAME_LEVEL_STATE_HPP
 
 #include <SFML\Graphics.hpp>
+#include <map>
+#include <random>
 
 #include "game_state.hpp"
 #include "map.hpp"
@@ -14,6 +16,10 @@ private:
 	
 	Map map;
 	Gui gui;
+	std::map<std::string, std::string> mapFiles;
+	std::map<std::string, Map> mapList;
+	bool noveltySearch;
+	int currentLevel;
 
 public:
 	Player player;

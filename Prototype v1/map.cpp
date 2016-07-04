@@ -27,21 +27,28 @@ void Map::loadMap(const std::string& filename,unsigned int width, unsigned int h
 			break;
 		case '2': {
 			Enemy enemy = Enemy(sf::Vector2f(currentX * this->tileSize, currentY* this->tileSize), game->texmgr.getRef("enemy"));
-
 			enemies.push_back(enemy);
 			cell.cellContents.push_back(entityAtlas.at("floor"));
 		}
 		case '3':
 			//pickup
+			this->keys++;
 			cell.cellContents.push_back(entityAtlas.at("floor"));
+			cell.cellContents.push_back(entityAtlas.at("key"));
+			
+			break;
 
 		case '4': 
+			//player
 			player.setPosition(sf::Vector2f(currentX * this->tileSize, currentY* this->tileSize));
-			cell.cellContents.push_back(entityAtlas.at("floor"));					
+			startPos = sf::Vector2f(currentX * this->tileSize, currentY* this->tileSize);
+			cell.cellContents.push_back(entityAtlas.at("start"));
 			break;
 		case '5':
 			//exit
-			cell.cellContents.push_back(entityAtlas.at("floor"));
+			exitPos = sf::Vector2f(currentX * this->tileSize, currentY* this->tileSize);
+			cell.cellContents.push_back(entityAtlas.at("exit"));
+			break;
 		
 		default:
 			break;
@@ -80,20 +87,35 @@ bool Map::checkCollision(sf::Vector2f position, Entity movingEntity) {
 	
 	//check collisions within map
 	for (auto &cell : this->mapCells) {
-		if (cell.cellX == position.x && cell.cellY == position.y) {
+		if (cell.cellX == position.x && cell.cellY == position.y) {		
+
 			for (auto &content : cell.cellContents) {					
 				if (content.type == Entity::entityType::WALL) {						
 					return true;
 				}
+				//player reaches exit
+				if (movingEntity.type == Entity::entityType::PLAYER
+					&& content.type == Entity::entityType::EXIT) {
+					leaveMap(this->nextLevel);
+				}
+				//player goes back level
+				if (movingEntity.type == Entity::entityType::PLAYER
+					&& content.type == Entity::entityType::START) {
+					leaveMap(this->prevLevel);
+				}
+
 				if (movingEntity.type == Entity::entityType::PLAYER
 					&& content.type == Entity::entityType::PICKUP) {
-					//PICKUP
-				}
-				
+					keys--;
+
+				}				
 				}
 			}
 		}
+
+	//check if player hits enemy
 	if (movingEntity.type == Entity::entityType::PLAYER) {
+		
 		for (auto &enemy : this->enemies) {
 			if (enemy.getPosition() == movingEntity.getPosition()) {
 				movingEntity.takeDamage();
@@ -101,7 +123,18 @@ bool Map::checkCollision(sf::Vector2f position, Entity movingEntity) {
 
 		}
 	}
+
 	return false;
+}
+
+void Map::leaveMap(bool& change) {
+	change = true;
+}
+
+void Map::returnMap(Player& player) {
+	player.setPosition(exitPos);
+	prevLevel = false;
+	nextLevel = false;
 }
 
 void Map::draw(sf::RenderWindow& window) {

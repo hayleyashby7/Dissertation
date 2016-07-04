@@ -21,6 +21,14 @@ public:
 	int height;
 	int width;
 	int tileSize;
+	int keys;
+
+	bool nextLevel;
+	bool prevLevel;
+
+
+	sf::Vector2f exitPos;
+	sf::Vector2f startPos;
 	
 	std::vector<Cell> mapCells;
 
@@ -33,12 +41,18 @@ public:
 	void enemyMove(Player& player);
 	bool checkCollision(sf::Vector2f position, Entity movingEntity);
 
+	void leaveMap(bool& change);
+	void returnMap(Player& player);
+
 	void draw(sf::RenderWindow& window);
 
 	Map() {		
 		this->width = 0;
 		this->height = 0;
 		this->tileSize = 0;
+		this->keys = 0;
+		this->nextLevel = false;
+		this->prevLevel = false;
 	}
 
 	Map(const std::string& filename, unsigned int width, unsigned int height, unsigned int tileSize,
@@ -46,6 +60,9 @@ public:
 		this->width = width;
 		this->height = height;
 		this->tileSize = tileSize;
+		this->keys = 0;
+		this->nextLevel = false;
+		this->prevLevel = false;
 		loadMap(filename, width, height, tileAtlas, game, player);
 	}
 };

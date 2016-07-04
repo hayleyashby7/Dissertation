@@ -15,7 +15,7 @@ public:
 	int tileSize = 32;
 	
 
-	enum class entityType {FLOOR = 0, WALL, PLAYER, ENEMY, PICKUP } type;
+	enum class entityType {FLOOR = 0, WALL, ENEMY, PLAYER, PICKUP, EXIT, START } type;
 
 	bool isSolid;
 

@@ -18,6 +18,7 @@ public:
 	int health;
 	int keys;
 	std::string getHealth();
+	std::string getKeys();
 	void takeDamage();
 	bool isDead();
 	

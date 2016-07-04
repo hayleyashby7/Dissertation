@@ -15,7 +15,6 @@ class Game {
 private:
 	void loadTextures();
 	void loadTiles();
-	void loadEntities();
 	std::vector<GameState*> states;
 
 public:	

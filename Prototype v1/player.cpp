@@ -39,6 +39,11 @@ std::string Player::getHealth() {
 	return healthNum;
 }
 
+std::string Player::getKeys() {
+	std::string keyNum = std::to_string(this->keys);
+	return keyNum;
+}
+
 bool Player::isDead() {
 	if (this->health <= 0) {
 		return true;

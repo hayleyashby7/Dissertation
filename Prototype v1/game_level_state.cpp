@@ -31,6 +31,32 @@ void GameLevel::update(sf::Clock& clock) {
 
 	}
 
+	/*Check if progressed level*/
+	if (this->map.nextLevel) {
+		currentLevel++;
+		if (currentLevel > 3) {
+			gameOver = true;
+		}
+		else {
+			std::string file = "map" + std::to_string(currentLevel);
+			map = Map(mapFiles[file], 15, 15, 32, game->tileAtlas, game, player);
+			mapList[file] = map;
+		}
+		map.nextLevel = false;		
+	}
+
+	/*Check if regressed level*/
+	if (this->map.prevLevel) {
+		if (currentLevel > 1) {
+			currentLevel--;
+		}
+		map.prevLevel = false;
+		std::string file = "map" + std::to_string(currentLevel);
+		map = mapList[file];
+		map.returnMap(player);
+		
+	}
+
 	/*Enemy movement*/
 	float dt = clock.getElapsedTime().asSeconds();
 	if (dt > this->game->gameSpeed) {
@@ -84,28 +110,52 @@ void GameLevel::eventHandler() {
 }
 
 void GameLevel::playerMove(sf::Keyboard::Key& dirKey) {
+	int mapKeys = map.keys;
 	sf::Vector2f newPos = player.movePosition(dirKey);
 	if (!map.checkCollision(newPos, player)) {
 		player.updatePos(newPos);
 	}
-	if (this->player.beenHit) {
-		this->gui.update("player", "Health: " + this->player.getHealth());
-		
+	if (map.keys < mapKeys) {
+		player.keys++;
+		this->gui.update("key", "Keys Gathered:" + this->player.getKeys());
 	}
+
+	if (this->player.beenHit) {
+		this->gui.update("player", "Health: " + this->player.getHealth());		
+	}
+
 	gameOver = player.isDead();
 	this->player.beenHit = false;
 
 }
-
 
 GameLevel::GameLevel(Game* game) {
 	player = Player(sf::Vector2f(0, 0), game->texmgr.getRef("player"));
 	this->game = game;
 	this->player = player;
 
-	int mapChoice = rand();
+	std::random_device rd;
+	std::mt19937 generator(rd());
+	std::bernoulli_distribution bd(0.5);
 
+	noveltySearch = bd(generator);
 
-	map = Map("assets/maze.dat", 15,15,32, game->tileAtlas, game, player);
+	if (noveltySearch) {
+		for (int i = 1; i < 4; i++) {
+			std::string filename = "assets/maps/map" + std::to_string(i) + ".dat";
+			std::string mapName = "map" + std::to_string(i);
+			mapFiles[mapName] = filename;
+		}
+	}
+	else {
+		for (int i = 4; i < 7; i++) {
+			std::string filename = "assets/maps/map" + std::to_string(i) + ".dat";
+			std::string mapName = "map" + std::to_string(i-3);
+			mapFiles[mapName] = filename;
+		}
+	}
+	currentLevel = 1;
+	map = Map(mapFiles["map1"], 15,15,32, game->tileAtlas, game, player);
+	mapList["map1"] = map;
 
 }

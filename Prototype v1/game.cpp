@@ -16,15 +16,20 @@ void Game::loadTextures() {
 	texmgr.loadTexture("wall", "assets/wall.png");
 	texmgr.loadTexture("player", "assets/player.png");
 	texmgr.loadTexture("enemy", "assets/enemy.png");
+	texmgr.loadTexture("exit", "assets/exit.png");
+	texmgr.loadTexture("start", "assets/start.png");
+	texmgr.loadTexture("key", "assets/key.png");
 }
 
 void Game::loadTiles() {
 	this->tileAtlas["floor"] = Tile(this->tileHeight, texmgr.getRef("floor"), false, Entity::entityType::FLOOR);
 	this->tileAtlas["wall"] = Tile(this->tileHeight, texmgr.getRef("wall"), true, Entity::entityType::WALL);
+	this->tileAtlas["exit"] = Tile(this->tileHeight, texmgr.getRef("exit"), false, Entity::entityType::EXIT);
+	this->tileAtlas["start"] = Tile(this->tileHeight, texmgr.getRef("start"), false, Entity::entityType::START);
+	this->tileAtlas["key"] = Tile(this->tileHeight, texmgr.getRef("key"), false, Entity::entityType::PICKUP);
 }
 
-void Game::loadEntities() {
-}
+
 
 void Game::pushBackState(GameState* state) {
 	/*if (!states.empty()) {
