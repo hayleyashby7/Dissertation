@@ -26,9 +26,10 @@ public:
 	Player(){}
 
 	Player(sf::Vector2f& initialPos, sf::Texture& texture) {
-		this->isSolid = true;
+		this->isSolid = true;		
 		this->type = entityType::PLAYER;
 		this->health = 100;
+		this->keys = 0;
 		this->beenHit = false;
 		this->sprite.setOrigin(sf::Vector2f(0.0f, 0.0f));
 		this->sprite.setPosition(initialPos);

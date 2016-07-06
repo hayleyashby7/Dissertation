@@ -11,6 +11,7 @@ class Entity {
 public:
 	sf::FloatRect entRect;
 	sf::Sprite sprite;
+	bool active = true;
 
 	int tileSize = 32;
 	

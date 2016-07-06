@@ -106,7 +106,11 @@ bool Map::checkCollision(sf::Vector2f position, Entity movingEntity) {
 
 				if (movingEntity.type == Entity::entityType::PLAYER
 					&& content.type == Entity::entityType::PICKUP) {
-					keys--;
+					if (content.active) {
+						keys--;
+						content.active = false;
+					}
+					
 
 				}				
 				}
@@ -141,11 +145,13 @@ void Map::draw(sf::RenderWindow& window) {
 
 	for (auto &cell : this->mapCells) {
 		for (auto &content : cell.cellContents){
-			sf::Vector2f pos;
-			pos.x = cell.cellX * content.tileSize;
-			pos.y = cell.cellY * content.tileSize;
-			content.sprite.setPosition(pos);
-			content.draw(window);
+			if (content.active) {
+				sf::Vector2f pos;
+				pos.x = cell.cellX * content.tileSize;
+				pos.y = cell.cellY * content.tileSize;
+				content.sprite.setPosition(pos);
+				content.draw(window);
+			}			
 		}
 	}
 	for (auto &enemy : this->enemies) {
