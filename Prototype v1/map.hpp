@@ -22,7 +22,8 @@ public:
 	int width;
 	int tileSize;
 	int keys;
-
+	
+	bool firstLevel = false;
 	bool nextLevel;
 	bool prevLevel;
 
@@ -63,6 +64,18 @@ public:
 		this->keys = 0;
 		this->nextLevel = false;
 		this->prevLevel = false;
+		loadMap(filename, width, height, tileAtlas, game, player);
+	}
+
+	Map(const std::string& filename, unsigned int width, unsigned int height, unsigned int tileSize,
+		std::map<std::string, Tile>& tileAtlas, Game* game, Player& player, bool first) {
+		this->width = width;
+		this->height = height;
+		this->tileSize = tileSize;
+		this->keys = 0;
+		this->nextLevel = false;
+		this->prevLevel = false;
+		this->firstLevel = first;
 		loadMap(filename, width, height, tileAtlas, game, player);
 	}
 };

@@ -28,13 +28,14 @@ void GameLevel::update(sf::Clock& clock) {
 	/*Check Game Over*/
 	if (this->gameOver) {
 		this->game->changeState(new MainMenu(this->game));
-
 	}
 
 	/*Check if progressed level*/
 	if (this->map.nextLevel) {
+		std::string lastLevel = "map" + std::to_string(currentLevel);
+		mapList[lastLevel] = this->map;
 		currentLevel++;
-		if (currentLevel > 3) {
+		if (currentLevel > maxLevel) {
 			gameOver = true;
 		}
 		else {
@@ -47,6 +48,9 @@ void GameLevel::update(sf::Clock& clock) {
 
 	/*Check if regressed level*/
 	if (this->map.prevLevel) {
+		std::string lastLevel = "map" + std::to_string(currentLevel);
+		mapList[lastLevel] = this->map;
+
 		if (currentLevel > 1) {
 			currentLevel--;
 		}
@@ -117,7 +121,7 @@ void GameLevel::playerMove(sf::Keyboard::Key& dirKey) {
 	}
 	if (map.keys < mapKeys) {
 		player.keys++;
-		this->gui.update("key", "Keys Gathered:" + this->player.getKeys());
+		this->gui.update("key", "Keys Gathered: " + this->player.getKeys());
 	}
 
 	if (this->player.beenHit) {
@@ -140,22 +144,20 @@ GameLevel::GameLevel(Game* game) {
 
 	noveltySearch = bd(generator);
 
-	if (noveltySearch) {
-		for (int i = 1; i < 4; i++) {
-			std::string filename = "assets/maps/map" + std::to_string(i) + ".dat";
+	for (int i = 1; i < maxLevel; i++) {
+		std::string filename;
+		if (noveltySearch) {
+			filename = "assets/maps/NS/map" + std::to_string(i) + ".dat";
+		}
+		else {
+			filename = "assets/maps/FF/map" + std::to_string(i) + ".dat";
+		}
 			std::string mapName = "map" + std::to_string(i);
-			mapFiles[mapName] = filename;
-		}
+			mapFiles[mapName] = filename;		
 	}
-	else {
-		for (int i = 4; i < 7; i++) {
-			std::string filename = "assets/maps/map" + std::to_string(i) + ".dat";
-			std::string mapName = "map" + std::to_string(i-3);
-			mapFiles[mapName] = filename;
-		}
-	}
+	
 	currentLevel = 1;
-	map = Map(mapFiles["map1"], 15,15,32, game->tileAtlas, game, player);
+	map = Map(mapFiles["map1"], 15,15,32, game->tileAtlas, game, player, true);
 	mapList["map1"] = map;
 
 }

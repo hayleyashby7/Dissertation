@@ -88,7 +88,7 @@ bool Map::checkCollision(sf::Vector2f position, Entity movingEntity) {
 	//check collisions within map
 	for (auto &cell : this->mapCells) {
 		if (cell.cellX == position.x && cell.cellY == position.y) {		
-
+			int currentKeys = this->keys;
 			for (auto &content : cell.cellContents) {					
 				if (content.type == Entity::entityType::WALL) {						
 					return true;
@@ -100,22 +100,25 @@ bool Map::checkCollision(sf::Vector2f position, Entity movingEntity) {
 				}
 				//player goes back level
 				if (movingEntity.type == Entity::entityType::PLAYER
-					&& content.type == Entity::entityType::START) {
+					&& content.type == Entity::entityType::START 
+					&& this->firstLevel == false) {
 					leaveMap(this->prevLevel);
 				}
 
+				//pickup item
 				if (movingEntity.type == Entity::entityType::PLAYER
 					&& content.type == Entity::entityType::PICKUP) {
 					if (content.active) {
-						keys--;
+						this->keys--;
 						content.active = false;
 					}
-					
-
-				}				
 				}
 			}
+			if (currentKeys != this->keys) {
+				cell.cellContents.pop_back();
+			}
 		}
+	}
 
 	//check if player hits enemy
 	if (movingEntity.type == Entity::entityType::PLAYER) {

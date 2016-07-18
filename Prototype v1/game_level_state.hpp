@@ -20,6 +20,7 @@ private:
 	std::map<std::string, Map> mapList;
 	bool noveltySearch;
 	int currentLevel;
+	int maxLevel = 6;
 
 public:
 	Player player;

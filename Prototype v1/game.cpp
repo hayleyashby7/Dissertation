@@ -107,7 +107,6 @@ Game::Game(){
 
 	this->window.create(sf::VideoMode(750, 550), "Prototype!", sf::Style::Titlebar | sf::Style::Close);
 	this->window.setFramerateLimit(60);
-
 	this->background.setTexture(this->texmgr.getRef("background"));
 }
 
