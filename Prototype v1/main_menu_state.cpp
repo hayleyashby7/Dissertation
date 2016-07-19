@@ -7,6 +7,7 @@ void MainMenu::init() {
 	this->game->window.clear(sf::Color::Black);
 	this->game->background.setTexture(this->game->texmgr.getRef("background"));
 	this->game->window.draw(this->game->background);
+	
 }
 void MainMenu::cleanUp() {}
 void MainMenu::pause() {}
@@ -14,10 +15,9 @@ void MainMenu::resume() {}
 
 void MainMenu::draw(const float dt) {
 	this->game->window.setView(this->menuView);
-
 	this->game->window.clear(sf::Color::Black);
-
 	this->game->window.draw(this->game->background);
+	gui.draw(this->game->window);
 
 	return;
 }

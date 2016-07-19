@@ -1,13 +1,16 @@
+
 #ifndef MAIN_MENU_STATE_HPP
 #define MAIN_MENU_STATE_HPP
 
 #include <SFML\Graphics.hpp>
 
 #include "game_state.hpp"
+#include "menu_gui.hpp"
 
 class MainMenu : public GameState {
 private:
 	sf::View menuView;
+	MenuGui gui;
 
 public:
 

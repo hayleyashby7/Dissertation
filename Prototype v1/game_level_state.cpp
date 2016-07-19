@@ -42,6 +42,7 @@ void GameLevel::update(sf::Clock& clock) {
 			std::string file = "map" + std::to_string(currentLevel);
 			map = Map(mapFiles[file], 15, 15, 32, game->tileAtlas, game, player);
 			mapList[file] = map;
+			this->gui.update("level", "Level: " + std::to_string(currentLevel));
 		}
 		map.nextLevel = false;		
 	}
@@ -57,6 +58,7 @@ void GameLevel::update(sf::Clock& clock) {
 		map.prevLevel = false;
 		std::string file = "map" + std::to_string(currentLevel);
 		map = mapList[file];
+		this->gui.update("level", "Level: " + std::to_string(currentLevel));
 		map.returnMap(player);
 		
 	}
@@ -66,12 +68,15 @@ void GameLevel::update(sf::Clock& clock) {
 	if (dt > this->game->gameSpeed) {
 		this->map.enemyMove(player);
 		if (this->player.beenHit) {
-			this->gui.update("player", "Health: " + this->player.getHealth());			
+			this->gui.update("player", "Health: " + this->player.getHealth());
+			this->gui.update("key", "Keys Gathered: " + this->player.getKeys());
 		}
 		gameOver = player.isDead();
 		this->player.beenHit = false;
 	}	
 	
+	
+
 	return;
 }
 
@@ -143,8 +148,14 @@ GameLevel::GameLevel(Game* game) {
 	std::bernoulli_distribution bd(0.5);
 
 	noveltySearch = bd(generator);
+	if (noveltySearch) {
+		this->code = "TC_NS";
+	}
+	else {
+		this->code = "TC_FF";
+	}
 
-	for (int i = 1; i < maxLevel; i++) {
+	for (int i = 1; i < 7; i++) {
 		std::string filename;
 		if (noveltySearch) {
 			filename = "assets/maps/NS/map" + std::to_string(i) + ".dat";
@@ -159,5 +170,7 @@ GameLevel::GameLevel(Game* game) {
 	currentLevel = 1;
 	map = Map(mapFiles["map1"], 15,15,32, game->tileAtlas, game, player, true);
 	mapList["map1"] = map;
+	this->gui.update("level", "Level: " + std::to_string(currentLevel));
+	this->gui.update("code", this->code);
 
 }

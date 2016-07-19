@@ -19,8 +19,9 @@ private:
 	std::map<std::string, std::string> mapFiles;
 	std::map<std::string, Map> mapList;
 	bool noveltySearch;
+	std::string code;
 	int currentLevel;
-	int maxLevel = 6;
+	int maxLevel = 5;
 
 public:
 	Player player;

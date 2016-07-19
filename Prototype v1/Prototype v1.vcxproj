@@ -159,6 +159,7 @@
     <ClCompile Include="main.cpp" />
     <ClCompile Include="main_menu_state.cpp" />
     <ClCompile Include="map.cpp" />
+    <ClCompile Include="menu_gui.cpp" />
     <ClCompile Include="player.cpp" />
     <ClCompile Include="texture_manager.cpp" />
     <ClCompile Include="tile.cpp" />
@@ -173,6 +174,7 @@
     <ClInclude Include="gui.hpp" />
     <ClInclude Include="main_menu_state.hpp" />
     <ClInclude Include="map.hpp" />
+    <ClInclude Include="menu_gui.hpp" />
     <ClInclude Include="player.hpp" />
     <ClInclude Include="texture_manager.hpp" />
     <ClInclude Include="tile.hpp" />

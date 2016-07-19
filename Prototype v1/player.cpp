@@ -30,7 +30,12 @@ void Player::setPosition(sf::Vector2f position) {
 }
 
 void Player::takeDamage() {
-	this->health -= 25;
+	if (keys > 0) {
+		keys--;
+	}
+	else {
+		this->health -= 25;
+	}	
 	beenHit = true;
 }
 
