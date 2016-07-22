@@ -13,6 +13,7 @@ public:
 	float cellY;
 	int tileSize = 32;
 
+
 	sf::Vector2f getPosition() {
 		sf::Vector2f position;
 		position.x = cellX * tileSize;

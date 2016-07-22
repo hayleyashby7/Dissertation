@@ -27,7 +27,7 @@ public:
 		this->guiText["menu"] = menu;
 
 
-		guiText["menu"].setString("Press S to Start, Press Q to Quit");
+		guiText["menu"].setString("Press S to Start");
 		guiStart.x = 257;
 		guiStart.y = 225;
 

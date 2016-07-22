@@ -22,6 +22,7 @@ public:
 	int width;
 	int tileSize;
 	int keys;
+	int totalKeys;
 	
 	bool firstLevel = false;
 	bool nextLevel;
@@ -33,7 +34,10 @@ public:
 	
 	std::vector<Cell> mapCells;
 
+
 	std::vector<Enemy> enemies;
+
+	std::map<std::string, Tile> tileAtlas;
 
 	void loadMap(const std::string& filename, unsigned int width, unsigned int height, 
 		std::map<std::string, Tile>& enemyAtlas, Game* game, Player& player);
@@ -53,7 +57,7 @@ public:
 		this->tileSize = 0;
 		this->keys = 0;
 		this->nextLevel = false;
-		this->prevLevel = false;
+		this->prevLevel = false; 
 	}
 
 	Map(const std::string& filename, unsigned int width, unsigned int height, unsigned int tileSize,
@@ -64,7 +68,8 @@ public:
 		this->keys = 0;
 		this->nextLevel = false;
 		this->prevLevel = false;
-		loadMap(filename, width, height, tileAtlas, game, player);
+		this->tileAtlas = tileAtlas;
+		loadMap(filename, width, height, this->tileAtlas, game, player);
 	}
 
 	Map(const std::string& filename, unsigned int width, unsigned int height, unsigned int tileSize,
@@ -76,7 +81,8 @@ public:
 		this->nextLevel = false;
 		this->prevLevel = false;
 		this->firstLevel = first;
-		loadMap(filename, width, height, tileAtlas, game, player);
+		this->tileAtlas = tileAtlas;
+		loadMap(filename, width, height, this->tileAtlas, game, player);
 	}
 };
 

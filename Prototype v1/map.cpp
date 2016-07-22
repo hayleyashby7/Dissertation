@@ -47,15 +47,18 @@ void Map::loadMap(const std::string& filename,unsigned int width, unsigned int h
 		case '5':
 			//exit
 			exitPos = sf::Vector2f(currentX * this->tileSize, currentY* this->tileSize);
-			cell.cellContents.push_back(entityAtlas.at("exit"));
+			cell.cellContents.push_back(entityAtlas.at("blockedexit"));
+			
 			break;
 		
 		default:
 			break;
 		}
+		
 		mapCells.push_back(cell);
 
 	}
+	this->totalKeys = this->keys;
 	input.close();
 	return;
 }
@@ -96,7 +99,12 @@ bool Map::checkCollision(sf::Vector2f position, Entity movingEntity) {
 				//player reaches exit
 				if (movingEntity.type == Entity::entityType::PLAYER
 					&& content.type == Entity::entityType::EXIT) {
-					leaveMap(this->nextLevel);
+					if ((this->totalKeys - this->keys) >= 3) {
+						leaveMap(this->nextLevel);
+					}
+					else {
+						return true;
+					}
 				}
 				//player goes back level
 				if (movingEntity.type == Entity::entityType::PLAYER
@@ -111,6 +119,14 @@ bool Map::checkCollision(sf::Vector2f position, Entity movingEntity) {
 					if (content.active) {
 						this->keys--;
 						content.active = false;
+						if ((this->totalKeys - this->keys) >= 3) {
+							for (auto& cell : mapCells) {
+								if (cell.cellX == (this->exitPos.x / tileSize) && cell.cellY == (this->exitPos.y / tileSize)) {
+									cell.cellContents.pop_back();
+									cell.cellContents.push_back(this->tileAtlas.at("exit"));
+								}
+							}
+						}						
 					}
 				}
 			}
