@@ -118,14 +118,14 @@ bool Map::checkCollision(sf::Vector2f position, Entity movingEntity) {
 				if (movingEntity.type == Entity::entityType::PLAYER
 					&& content.type == Entity::entityType::PICKUP) {
 					if (content.active) {
-						this->keys--;
-					
+						this->keys--;					
 						content.active = false;
 						if ((this->totalKeys - this->keys) >= 3) {
 							for (auto& cell : mapCells) {
 								if (cell.cellX == (this->exitPos.x / tileSize) && cell.cellY == (this->exitPos.y / tileSize)) {
 									cell.cellContents.pop_back();
 									cell.cellContents.push_back(this->tileAtlas.at("exit"));
+									this->unlocked = true;
 								}
 							}
 						}						
@@ -222,5 +222,5 @@ void Map::draw(sf::RenderWindow& window) {
 	for (auto &enemy : this->enemies) {
 		enemy.draw(window);
 	}	
-	//
+	
 }

@@ -4,6 +4,8 @@
 #include "info_state.hpp"
 #include "map.hpp"
 
+#include <SFML\Audio.hpp>
+
 
 void GameLevel::init() {
 	this->game->window.clear(sf::Color::Black);
@@ -11,8 +13,9 @@ void GameLevel::init() {
 	this->game->window.draw(this->game->background);
 	map.draw(this->game->window);
 	audmgr.loadSoundBuffer("pickup", "assets/sounds/pickup.wav");
-	audmgr.loadSoundBuffer("playerHit", "assets/sounds/playerhit.wav");
-	audmgr.loadSoundBuffer("unlockDoor", "assets/sounds/unlockdoor.wav");	
+	audmgr.loadSoundBuffer("playerhit", "assets/sounds/playerhit.wav");
+	audmgr.loadSoundBuffer("unlockdoor", "assets/sounds/unlockdoor.wav");	
+	audmgr.loadSoundBuffer("explode", "assets/sounds/explode.wav");
 }
 void GameLevel::cleanUp(){}
 void GameLevel::pause(){}
@@ -135,6 +138,13 @@ void GameLevel::eventHandler() {
 				if (this->player.TNT > 0) {
 					this->map.TNT(this->player);
 					this->gui.update("tnt", "TNT: " + std::to_string(this->player.TNT));
+					sf::Sound explodeSound;
+					explodeSound.setBuffer(this->audmgr.getRef("explode"));
+					explodeSound.play();
+					while (explodeSound.getStatus() == sf::Sound::Playing) {
+
+					}
+					
 				}				
 			}
 		}								
@@ -154,23 +164,36 @@ void GameLevel::playerMove(sf::Keyboard::Key& dirKey) {
 	}
 	if (map.keys < mapKeys) {
 		player.keys++;
-		this->gui.update("key", "Keys Gathered: " + this->player.getKeys());
-		sf::SoundBuffer pickupBuf;
-		pickupBuf.loadFromFile("assets/sounds/pickup.wav");
 		sf::Sound pickupSound;
-		pickupSound.setBuffer(pickupBuf);
-		pickupSound.setVolume(50);
-		this->game->bgMusic.pause();
+		pickupSound.setBuffer(this->audmgr.getRef("pickup"));
 		pickupSound.play();
-		this->game->bgMusic.play();
+
+		while (pickupSound.getStatus() == sf::Sound::Playing) {
+			
+		}		
 	}
 
 	if (this->player.beenHit) {
-		this->gui.update("player", "Health: " + this->player.getHealth());		
+		this->gui.update("player", "Health: " + this->player.getHealth());	
+		sf::Sound playerhit;
+		playerhit.setBuffer(this->audmgr.getRef("playerhit"));
+		playerhit.play();
+
+		while (playerhit.getStatus() == sf::Sound::Playing) {
+
+		}
 	}
 
 	gameOver = player.isDead();
 	this->player.beenHit = false;
+	if (this->map.unlocked) {
+		sf::Sound door;
+		door.setBuffer(this->audmgr.getRef("unlockdoor"));
+		door.play();
+		while (door.getStatus() == sf::Sound::Playing) {
+
+		}
+	}
 
 }
 
@@ -179,6 +202,7 @@ GameLevel::GameLevel(Game* game) {
 	this->game = game;
 	this->player = player;
 	this->game->bgMusic.openFromFile("assets/sounds/level.wav");
+	this->game->bgMusic.setVolume(25);
 	this->game->bgMusic.play();
 
 	std::random_device rd;
@@ -187,10 +211,10 @@ GameLevel::GameLevel(Game* game) {
 
 	noveltySearch = bd(generator);
 	if (noveltySearch) {
-		this->code = "TC_NS";
+		this->code = "Code: TC_NS";
 	}
 	else {
-		this->code = "TC_FF";
+		this->code = "Code: TC_FF";
 	}
 
 	for (int i = 1; i < 7; i++) {

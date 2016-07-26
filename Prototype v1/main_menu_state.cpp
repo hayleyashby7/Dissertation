@@ -61,11 +61,9 @@ void MainMenu::eventHandler() {
 					this->game->changeState(new GameLevel(this->game));
 					break;
 				case 1:
-					break;
-				case 2:
 					this->game->changeState(new Info(this->game, "info"));
 					break;
-				case 3:
+				case 2:
 					this->game->changeState(new Info(this->game, "credits"));
 					break;
 				default:

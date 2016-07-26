@@ -3,13 +3,11 @@
 void MenuGui::init(int height, int width) {
 	font.loadFromFile("assets/KF.ttf");
 	start.setString("Start");
-	options.setString("Options");
 	info.setString("How to Play");
 	credits.setString("Credits");
 
 	
 	this->menuText.push_back(start);
-	this->menuText.push_back(options);
 	this->menuText.push_back(info);
 	this->menuText.push_back(credits);
 	int i = 1;

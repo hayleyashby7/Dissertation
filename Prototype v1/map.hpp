@@ -29,6 +29,7 @@ public:
 	bool nextLevel;
 	bool prevLevel;
 	bool prevVisited = false;
+	bool unlocked = false;
 
 
 	sf::Vector2f exitPos;
