@@ -6,11 +6,13 @@ Gui::Gui() {
 	this->guiText["level"] = levelNumber;
 	this->guiText["key"] = numOfKeys;
 	this->guiText["player"] = playerStatus;
+	this->guiText["tnt"] = TNT;
 
 	guiText["code"].setString("Code: ");
 	guiText["level"].setString("Level: ");
 	guiText["key"].setString("Keys Gathered: 0");
 	guiText["player"].setString("Health: 100");
+	guiText["tnt"].setString("TNT: ");
 
 
 	guiStart.x = 557;

@@ -9,6 +9,7 @@ void MainMenu::init() {
 	this->game->background.setTexture(this->game->texmgr.getRef("background"));
 	this->game->window.draw(this->game->background);
 	
+	
 }
 void MainMenu::cleanUp() {}
 void MainMenu::pause() {}
@@ -87,4 +88,5 @@ MainMenu::MainMenu(Game* game) {
 	this->menuView.setSize(pos);
 	pos *= 0.5f;
 	this->menuView.setCenter(pos);
+	this->game->bgMusic.play();
 }

@@ -15,6 +15,7 @@ public:
 	sf::Text numOfKeys;
 	sf::Text levelNumber;
 	sf::Text gameCode;
+	sf::Text TNT;
 	sf::Font font;
 
 	std::map<std::string, sf::Text> guiText;

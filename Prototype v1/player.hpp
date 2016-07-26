@@ -17,6 +17,7 @@ public:
 	bool beenHit;
 	int health;
 	int keys;
+	int TNT;
 	std::string getHealth();
 	std::string getKeys();
 	void takeDamage();
@@ -30,6 +31,7 @@ public:
 		this->type = entityType::PLAYER;
 		this->health = 100;
 		this->keys = 0;
+		this->TNT = 2;
 		this->beenHit = false;
 		this->sprite.setOrigin(sf::Vector2f(0.0f, 0.0f));
 		this->sprite.setPosition(initialPos);

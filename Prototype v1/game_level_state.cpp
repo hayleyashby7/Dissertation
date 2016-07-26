@@ -10,7 +10,9 @@ void GameLevel::init() {
 	this->game->background.setTexture(this->game->texmgr.getRef("background"));
 	this->game->window.draw(this->game->background);
 	map.draw(this->game->window);
-	
+	audmgr.loadSoundBuffer("pickup", "assets/sounds/pickup.wav");
+	audmgr.loadSoundBuffer("playerHit", "assets/sounds/playerhit.wav");
+	audmgr.loadSoundBuffer("unlockDoor", "assets/sounds/unlockdoor.wav");	
 }
 void GameLevel::cleanUp(){}
 void GameLevel::pause(){}
@@ -33,32 +35,51 @@ void GameLevel::update(sf::Clock& clock) {
 
 	/*Check if progressed level*/
 	if (this->map.nextLevel) {
-		std::string lastLevel = "map" + std::to_string(currentLevel);
-		mapList[lastLevel] = this->map;
+		this->map.prevVisited = true;
+		if (prevLevels.size() >= this->map.id) {
+			prevLevels[currentLevel - 1] = this->map;
+		}
+		else {
+			prevLevels.push_back(this->map);
+		}
 		currentLevel++;
 		if (currentLevel > maxLevel) {
 			gameOver = true;
 		}
-		else {
-			std::string file = "map" + std::to_string(currentLevel);
-			map = Map(mapFiles[file], 15, 15, 32, game->tileAtlas, game, player);
-			mapList[file] = map;
-			this->gui.update("level", "Level: " + std::to_string(currentLevel));
+		else {	
+			bool previous = false;
+			for (auto& oldMap : prevLevels) {
+				if (oldMap.prevVisited && oldMap.id == currentLevel) {
+					this->map = oldMap;
+					this->map.restartMap(player);
+					previous = true;
+					break;
+				}
+			}				
+			if (!previous) {
+				std::string file = "map" + std::to_string(currentLevel);
+				map = Map(mapFiles[file], currentLevel, 15, 15, 32, game->tileAtlas, game, player);
+				mapList[file] = map;
+				this->gui.update("level", "Level: " + std::to_string(currentLevel));
+			}
+			
 		}
 		map.nextLevel = false;		
 	}
 
 	/*Check if regressed level*/
 	if (this->map.prevLevel) {
-		std::string lastLevel = "map" + std::to_string(currentLevel);
-		mapList[lastLevel] = this->map;
-
+		this->map.prevVisited = true;
+		if (prevLevels.size() >= currentLevel) {
+			prevLevels[currentLevel - 1] = this->map;
+		}
+		else {
+			prevLevels.push_back(this->map);
+		}		
 		if (currentLevel > 1) {
 			currentLevel--;
 		}
-		map.prevLevel = false;
-		std::string file = "map" + std::to_string(currentLevel);
-		map = mapList[file];
+		map = prevLevels[currentLevel-1];
 		this->gui.update("level", "Level: " + std::to_string(currentLevel));
 		map.returnMap(player);
 		
@@ -109,7 +130,13 @@ void GameLevel::eventHandler() {
 				event.key.code == sf::Keyboard::S || event.key.code == sf::Keyboard::D) {
 				sf::Keyboard::Key k = event.key.code;
 				this->playerMove(k);				
-			}				
+			}	
+			if (event.key.code == sf::Keyboard::Return) {
+				if (this->player.TNT > 0) {
+					this->map.TNT(this->player);
+					this->gui.update("tnt", "TNT: " + std::to_string(this->player.TNT));
+				}				
+			}
 		}								
 		default:
 			break;
@@ -128,6 +155,14 @@ void GameLevel::playerMove(sf::Keyboard::Key& dirKey) {
 	if (map.keys < mapKeys) {
 		player.keys++;
 		this->gui.update("key", "Keys Gathered: " + this->player.getKeys());
+		sf::SoundBuffer pickupBuf;
+		pickupBuf.loadFromFile("assets/sounds/pickup.wav");
+		sf::Sound pickupSound;
+		pickupSound.setBuffer(pickupBuf);
+		pickupSound.setVolume(50);
+		this->game->bgMusic.pause();
+		pickupSound.play();
+		this->game->bgMusic.play();
 	}
 
 	if (this->player.beenHit) {
@@ -143,6 +178,8 @@ GameLevel::GameLevel(Game* game) {
 	player = Player(sf::Vector2f(0, 0), game->texmgr.getRef("player"));
 	this->game = game;
 	this->player = player;
+	this->game->bgMusic.openFromFile("assets/sounds/level.wav");
+	this->game->bgMusic.play();
 
 	std::random_device rd;
 	std::mt19937 generator(rd());
@@ -169,9 +206,10 @@ GameLevel::GameLevel(Game* game) {
 	}
 	
 	currentLevel = 1;
-	map = Map(mapFiles["map1"], 15,15,32, game->tileAtlas, game, player, true);
+	map = Map(mapFiles["map1"], currentLevel, 15,15,32, game->tileAtlas, game, player, true);
 	mapList["map1"] = map;
 	this->gui.update("level", "Level: " + std::to_string(currentLevel));
 	this->gui.update("code", this->code);
+	this->gui.update("tnt", "TNT: " + std::to_string(this->player.TNT));
 
 }

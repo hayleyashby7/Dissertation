@@ -18,6 +18,7 @@ public:
 		sf::Vector2f position;
 		position.x = cellX * tileSize;
 		position.y = cellY * tileSize;
+		return position;
 	}
 
 	Cell(const float& x, const float& y) {

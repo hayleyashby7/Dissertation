@@ -23,10 +23,12 @@ public:
 	int tileSize;
 	int keys;
 	int totalKeys;
+	int id;
 	
 	bool firstLevel = false;
 	bool nextLevel;
 	bool prevLevel;
+	bool prevVisited = false;
 
 
 	sf::Vector2f exitPos;
@@ -39,7 +41,7 @@ public:
 
 	std::map<std::string, Tile> tileAtlas;
 
-	void loadMap(const std::string& filename, unsigned int width, unsigned int height, 
+	void loadMap(const std::string& filename, int id, unsigned int width, unsigned int height,
 		std::map<std::string, Tile>& enemyAtlas, Game* game, Player& player);
 
 	
@@ -48,6 +50,8 @@ public:
 
 	void leaveMap(bool& change);
 	void returnMap(Player& player);
+	void restartMap(Player& player);
+	void TNT(Player& player);
 
 	void draw(sf::RenderWindow& window);
 
@@ -60,7 +64,7 @@ public:
 		this->prevLevel = false; 
 	}
 
-	Map(const std::string& filename, unsigned int width, unsigned int height, unsigned int tileSize,
+	Map(const std::string& filename, int id, unsigned int width, unsigned int height, unsigned int tileSize,
 		std::map<std::string, Tile>& tileAtlas, Game* game, Player& player) {
 		this->width = width;
 		this->height = height;
@@ -69,10 +73,10 @@ public:
 		this->nextLevel = false;
 		this->prevLevel = false;
 		this->tileAtlas = tileAtlas;
-		loadMap(filename, width, height, this->tileAtlas, game, player);
+		loadMap(filename, id, width, height, this->tileAtlas, game, player);
 	}
 
-	Map(const std::string& filename, unsigned int width, unsigned int height, unsigned int tileSize,
+	Map(const std::string& filename, int id, unsigned int width, unsigned int height, unsigned int tileSize,
 		std::map<std::string, Tile>& tileAtlas, Game* game, Player& player, bool first) {
 		this->width = width;
 		this->height = height;
@@ -82,7 +86,7 @@ public:
 		this->prevLevel = false;
 		this->firstLevel = first;
 		this->tileAtlas = tileAtlas;
-		loadMap(filename, width, height, this->tileAtlas, game, player);
+		loadMap(filename,id, width, height, this->tileAtlas, game, player);
 	}
 };
 

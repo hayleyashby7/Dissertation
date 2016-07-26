@@ -4,8 +4,11 @@
 #include <map>
 #include <vector>
 #include <SFML\Graphics.hpp>
+#include <SFML\Audio.hpp>
+
 
 #include "texture_manager.hpp"
+#include "audio_manager.hpp"
 #include "tile.hpp"
 #include "entity.hpp"
 
@@ -15,6 +18,8 @@ class Game {
 private:
 	void loadTextures();
 	void loadTiles();
+	void loadAudio();
+
 	std::vector<GameState*> states;
 
 public:	
@@ -26,6 +31,8 @@ public:
 	sf::RenderWindow window;
 	TextureManager texmgr;
 	sf::Sprite background;
+
+	sf::Music bgMusic;
 
 	std::map<std::string, Tile> tileAtlas;
 

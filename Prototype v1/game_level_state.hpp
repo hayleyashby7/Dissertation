@@ -2,10 +2,12 @@
 #define GAME_LEVEL_STATE_HPP
 
 #include <SFML\Graphics.hpp>
+#include <SFML\Audio.hpp>
 #include <map>
 #include <random>
 
 #include "game_state.hpp"
+#include "audio_manager.hpp"
 #include "map.hpp"
 #include "gui.hpp"
 #include "player.hpp"
@@ -16,12 +18,14 @@ private:
 	
 	Map map;
 	Gui gui;
+	AudioManager audmgr;
 	std::map<std::string, std::string> mapFiles;
 	std::map<std::string, Map> mapList;
+	std::vector<Map>prevLevels;
 	bool noveltySearch;
 	std::string code;
 	int currentLevel;
-	int maxLevel = 5;
+	int maxLevel = 6;
 
 public:
 	Player player;

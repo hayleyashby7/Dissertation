@@ -1,8 +1,9 @@
 #include "map.hpp"
 
 
-void Map::loadMap(const std::string& filename,unsigned int width, unsigned int height, 
+void Map::loadMap(const std::string& filename,int id, unsigned int width, unsigned int height, 
 	std::map<std::string, Tile>& entityAtlas, Game* game, Player& player) {
+	this->id = id;
 	int totalSize = width * height;	
 	std::ifstream input;
 	input.open(filename);
@@ -118,6 +119,7 @@ bool Map::checkCollision(sf::Vector2f position, Entity movingEntity) {
 					&& content.type == Entity::entityType::PICKUP) {
 					if (content.active) {
 						this->keys--;
+					
 						content.active = false;
 						if ((this->totalKeys - this->keys) >= 3) {
 							for (auto& cell : mapCells) {
@@ -158,6 +160,50 @@ void Map::returnMap(Player& player) {
 	player.setPosition(exitPos);
 	prevLevel = false;
 	nextLevel = false;
+}
+
+void Map::restartMap(Player& player) {
+	player.setPosition(startPos);
+	prevLevel = false;
+	nextLevel = false;
+}
+
+void Map::TNT(Player& player) {
+	player.TNT--;
+	sf::Vector2f playerPos = player.getPosition();
+	std::vector<sf::Vector2f> nearby;
+	nearby.push_back(playerPos);
+	nearby.push_back(playerPos);
+	nearby.push_back(playerPos);
+	nearby.push_back(playerPos);
+	nearby[0].x += tileSize;
+	nearby[1].x -= tileSize;
+	nearby[2].y += tileSize;
+	nearby[3].y -= tileSize;
+
+	for (auto& cell : mapCells) {
+		for (auto& near : nearby) {
+			if (cell.getPosition() == near) {
+				bool changed = false;
+				for (auto &content : cell.cellContents) {					
+					switch (content.type){
+					case Entity::entityType::WALL:
+						content.type = Entity::entityType::FLOOR;
+						changed = true;						
+						break;
+					default:
+						break;
+					}
+				}
+				if (changed) {
+					cell.cellContents.pop_back();
+					cell.cellContents.push_back(this->tileAtlas.at("floor"));
+				}
+			}
+		}
+	}
+
+
 }
 
 void Map::draw(sf::RenderWindow& window) {

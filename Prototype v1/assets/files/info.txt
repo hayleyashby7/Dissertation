@@ -1,11 +1,12 @@
-You are Wryn, a brave treasure seeker!
-You must the caves of Kestala...
+You are Wryn, a brave adventurer and treasure seeker.
+Having heard tales of great riches, 
+you have decided to explore the great caves of Kestala.
+Armed only with your wits (and a few sticks of TNT) 
+you seek your fortune...
 ...but beware what lies within!
 
 Controls
-W- Up
-A- Left
-S-Down
-D-Right
-Q-Quit
-B-Back to Menu
+W- Up	A- Left	
+S-Down	D-Right
+Enter - TNT!
+Q-Quit	B-Back to Menu
