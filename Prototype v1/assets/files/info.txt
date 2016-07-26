@@ -1,0 +1,11 @@
+You are Wryn, a brave treasure seeker!
+You must the caves of Kestala...
+...but beware what lies within!
+
+Controls
+W- Up
+A- Left
+S-Down
+D-Right
+Q-Quit
+B-Back to Menu

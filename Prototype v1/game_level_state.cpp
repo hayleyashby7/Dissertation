@@ -1,6 +1,7 @@
 #include "game_state.hpp"
 #include "game_level_state.hpp"
 #include "main_menu_state.hpp"
+#include "info_state.hpp"
 #include "map.hpp"
 
 
@@ -11,9 +12,9 @@ void GameLevel::init() {
 	map.draw(this->game->window);
 	
 }
-void GameLevel::cleanUp() {}
-void GameLevel::pause() {}
-void GameLevel::resume() {}
+void GameLevel::cleanUp(){}
+void GameLevel::pause(){}
+void GameLevel::resume(){}
 
 void GameLevel::draw(const float dt) {
 	this->game->window.clear(sf::Color::Black);	
@@ -95,12 +96,12 @@ void GameLevel::eventHandler() {
 
 		/*Key Pressed*/
 		case sf::Event::KeyPressed: {
-			if (event.key.code == sf::Keyboard::Escape) {
+			if (event.key.code == sf::Keyboard::Q) {
 				game->window.close();
 				break;
 			}
-			if (event.key.code == sf::Keyboard::Q) {
-				this->game->changeState(new MainMenu(this->game));
+			if (event.key.code == sf::Keyboard::B) {
+				this->game->goBackState();
 				break;
 			}
 

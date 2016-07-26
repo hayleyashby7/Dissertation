@@ -21,6 +21,8 @@ public:
 	void changeState(Game* game, GameState* state) {
 		game->changeState(state);
 	}
+	
+	
 
 	GameState(){}
 };

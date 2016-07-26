@@ -11,7 +11,7 @@ void Map::loadMap(const std::string& filename,unsigned int width, unsigned int h
 
 	for (int i = 0; i <totalSize; i++)	
 	{
-		currentX = i % width + 1;
+		currentX = float(i % width + 1);
 		if (i % height == 0) currentY++;
 
 		Cell cell(currentX, currentY);	
@@ -109,7 +109,7 @@ bool Map::checkCollision(sf::Vector2f position, Entity movingEntity) {
 				//player goes back level
 				if (movingEntity.type == Entity::entityType::PLAYER
 					&& content.type == Entity::entityType::START 
-					&& this->firstLevel == false) {
+					&& this->firstLevel == false) {					
 					leaveMap(this->prevLevel);
 				}
 

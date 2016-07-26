@@ -3,45 +3,34 @@
 
 #include <SFML\Graphics.hpp>
 #include <string>
-#include <map>
-
 #include "game.hpp"
 
 
 class MenuGui {
 public:
 
-	sf::Text menu;
+	void init(int height, int width);
+	void draw(sf::RenderWindow& window);
+	void MoveUp();
+	void MoveDown();
+	int getSelection();
+
+	MenuGui() {};
+
+private:
+	int selectedOption;
+	sf::Text start;
+	sf::Text info;
+	sf::Text options;
+	sf::Text credits;
+
 	sf::Font font;
 
-	std::map<std::string, sf::Text> guiText;
-	sf::Vector2f guiStart;
-
-	void draw(sf::RenderWindow& window);
-	void update(std::string key, std::string newValue);
+	std::vector<sf::Text> menuText;
 
 
-	MenuGui() {
-		font.loadFromFile("assets/Augusta.ttf");
-
-		this->guiText["menu"] = menu;
 
 
-		guiText["menu"].setString("Press S to Start");
-		guiStart.x = 257;
-		guiStart.y = 225;
-
-		int i = 0;
-		for (auto &text : this->guiText) {
-			float x = guiStart.x;
-			float y = guiStart.y + (i * 100);
-			text.second.setPosition(x, y);
-			text.second.setFont(font);
-			text.second.setColor(sf::Color::White);
-			text.second.setCharacterSize(20);
-			i++;
-		}
-	};
 };
 
 #endif // !MENU_GUI_HPP

@@ -34,9 +34,6 @@ void Game::loadTiles() {
 
 
 void Game::pushBackState(GameState* state) {
-	/*if (!states.empty()) {
-		states.back()->pause();
-	}*/
 	states.push_back(state);
 	states.back()->init();
 }
@@ -46,18 +43,20 @@ void Game::popBackState(){
 		states.back()->cleanUp();
 		states.pop_back();
 	}
-	/*if (!states.empty()) {
-		states.back()->resume();
-	}*/
 }
 
 void Game::changeState(GameState* state){
-	if (!states.empty()) {
-		states.back()->cleanUp();
-		states.pop_back();
-	}
+	//if (!states.empty()) {
+	//	states.back()->cleanUp();
+	//	states.pop_back();
+	//}
 	states.push_back(state);
 	states.back()->init();
+}
+
+void Game::goBackState() {
+	int penultState = states.size() - 2;
+	changeState(states[penultState]);
 }
 
 GameState* Game::checkState(){

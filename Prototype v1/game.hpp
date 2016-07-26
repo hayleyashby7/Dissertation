@@ -33,6 +33,7 @@ public:
 	void pushBackState(GameState* state);
 	void popBackState();
 	void changeState(GameState* state);
+	void goBackState();
 
 	void draw(const float dt);
 	void update(sf::Clock& clock);

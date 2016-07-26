@@ -1,6 +1,7 @@
-#include "game_level_state.hpp"
 #include "game_state.hpp"
+#include "game_level_state.hpp"
 #include "main_menu_state.hpp"
+#include "info_state.hpp"
 
 
 void MainMenu::init() {
@@ -40,14 +41,35 @@ void MainMenu::eventHandler() {
 
 		/*Key Pressed*/
 		case sf::Event::KeyPressed: {
-			if (event.key.code == sf::Keyboard::Escape) {
+			if (event.key.code == sf::Keyboard::Q) {
 				game->window.close();
 				break;
 			}
 
+			if (event.key.code == sf::Keyboard::W) {
+				this->gui.MoveUp();
+			}
 			if (event.key.code == sf::Keyboard::S) {
-				this->game->changeState(new GameLevel(this->game));
-				break;
+				this->gui.MoveDown();
+			}
+
+			if (event.key.code == sf::Keyboard::Return) {
+				switch (this->gui.getSelection())
+				{
+				case 0:
+					this->game->changeState(new GameLevel(this->game));
+					break;
+				case 1:
+					break;
+				case 2:
+					this->game->changeState(new Info(this->game, "info"));
+					break;
+				case 3:
+					this->game->changeState(new Info(this->game, "credits"));
+					break;
+				default:
+					break;
+				}				
 			}
 		}
 
@@ -60,7 +82,8 @@ void MainMenu::eventHandler() {
 
 MainMenu::MainMenu(Game* game) {
 	this->game = game;
-	sf::Vector2f pos = sf::Vector2f(this->game->window.getSize());
+	sf::Vector2f pos = sf::Vector2f(this->game->window.getSize());	
+	this->gui.init(pos.y, pos.x);
 	this->menuView.setSize(pos);
 	pos *= 0.5f;
 	this->menuView.setCenter(pos);
