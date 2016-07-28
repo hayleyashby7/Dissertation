@@ -38,8 +38,15 @@ void Info::eventHandler() {
 				break;
 			}
 			if (event.key.code == sf::Keyboard::B) {
-				this->game->goBackState();
-				break;
+				if (type.compare("win") == 0 || type.compare("dead") == 0) {
+					this->game->newGame(new MainMenu(this->game));
+					break;
+				}
+				else if (type.compare("info") == 0 || type.compare("credits") == 0) {
+					this->game->goBackState();
+					break;
+				}
+				
 			}
 		}
 		}
@@ -48,6 +55,7 @@ void Info::eventHandler() {
 
 Info::Info(Game* game, std::string type) {
 	this->game = game;
+	this->type = type;
 	sf::Vector2f pos = sf::Vector2f(this->game->window.getSize());		
 	this->infoView.setSize(pos);
 	int width = pos.x;
@@ -61,6 +69,12 @@ Info::Info(Game* game, std::string type) {
 	}
 	else if (type.compare("credits")==0) {
 		filename = "assets/files/credits.txt";
+	}
+	else if (type.compare("win") == 0) {
+		filename = "assets/files/win.txt";
+	}
+	else if (type.compare("dead") == 0) {
+		filename = "assets/files/dead.txt";
 	}
 	this->infoGui.init(width, height, filename);
 };

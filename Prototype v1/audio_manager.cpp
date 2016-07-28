@@ -18,3 +18,8 @@ void AudioManager::loadSoundBuffer(const std::string& name, const std::string& f
 sf::SoundBuffer& AudioManager::getRef(const std::string& soundbuffer) {
 	return this->soundbuffs.at(soundbuffer);
 }
+
+void AudioManager::playSound(std::string bufferName, sf::Sound& sound) {	
+	sound.setBuffer(getRef(bufferName));
+	sound.play();
+}

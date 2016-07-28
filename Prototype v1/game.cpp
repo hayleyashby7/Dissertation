@@ -10,15 +10,15 @@
 
 
 void Game::loadTextures() {
-	texmgr.loadTexture("background", "assets/background.png");
-	texmgr.loadTexture("floor", "assets/floor.png");
-	texmgr.loadTexture("wall", "assets/wall.png");
-	texmgr.loadTexture("player", "assets/player.png");
-	texmgr.loadTexture("enemy", "assets/enemy.png");
-	texmgr.loadTexture("exit", "assets/exit.png");
-	texmgr.loadTexture("blockedexit", "assets/blockedExit.png");
-	texmgr.loadTexture("start", "assets/start.png");
-	texmgr.loadTexture("key", "assets/key.png");
+	texmgr.loadTexture("background", "assets/art/background.png");
+	texmgr.loadTexture("floor", "assets/art/floor.png");
+	texmgr.loadTexture("wall", "assets/art/wall.png");
+	texmgr.loadTexture("player", "assets/art/player.png");
+	texmgr.loadTexture("enemy", "assets/art/enemy.png");
+	texmgr.loadTexture("exit", "assets/art/exit.png");
+	texmgr.loadTexture("blockedexit", "assets/art/blockedExit.png");
+	texmgr.loadTexture("start", "assets/art/start.png");
+	texmgr.loadTexture("key", "assets/art/key.png");
 }
 
 void Game::loadTiles() {
@@ -30,6 +30,12 @@ void Game::loadTiles() {
 	this->tileAtlas["key"] = Tile(this->tileHeight, texmgr.getRef("key"), false, Entity::entityType::PICKUP);
 }
 
+void Game::loadAudio() {
+	audmgr.loadSoundBuffer("pickup", "assets/sounds/pickup.wav");
+	audmgr.loadSoundBuffer("playerhit", "assets/sounds/playerhit.wav");
+	audmgr.loadSoundBuffer("unlockdoor", "assets/sounds/unlockdoor.wav");
+	audmgr.loadSoundBuffer("explode", "assets/sounds/explode.wav");
+}
 
 
 void Game::pushBackState(GameState* state) {
@@ -45,10 +51,6 @@ void Game::popBackState(){
 }
 
 void Game::changeState(GameState* state){
-	//if (!states.empty()) {
-	//	states.back()->cleanUp();
-	//	states.pop_back();
-	//}
 	states.push_back(state);
 	states.back()->init();
 }
@@ -101,15 +103,21 @@ void Game::gameLoop(){
 	}
 }
 
+void Game::newGame(GameState* state) {
+	cleanUp();
+	changeState(state);
+}
+
 Game::Game(){
 	this->loadTextures();
 	this->loadTiles();
-
-	this->window.create(sf::VideoMode(750, 550), "Dungeon Game!", sf::Style::Titlebar | sf::Style::Close);
+	this->loadAudio();
+	this->window.create(sf::VideoMode(750, 550), "Kestala", sf::Style::Titlebar | sf::Style::Close);
 	this->window.setFramerateLimit(60);
 	this->background.setTexture(this->texmgr.getRef("background"));
 	this->bgMusic.openFromFile("assets/sounds/mainmenu.wav");
 	this->bgMusic.setVolume(50);
+	this->SFX.setVolume(50);
 }
 
 Game::~Game(){

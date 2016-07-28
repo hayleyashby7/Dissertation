@@ -9,6 +9,7 @@
 
 #include "texture_manager.hpp"
 #include "audio_manager.hpp"
+
 #include "tile.hpp"
 #include "entity.hpp"
 
@@ -32,7 +33,9 @@ public:
 	TextureManager texmgr;
 	sf::Sprite background;
 
+	AudioManager audmgr;
 	sf::Music bgMusic;
+	sf::Sound SFX;
 
 	std::map<std::string, Tile> tileAtlas;
 
@@ -47,6 +50,7 @@ public:
 	void eventHandler();
 
 	void cleanUp();
+	void newGame(GameState* state);
 
 	GameState* checkState();
 

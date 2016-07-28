@@ -18,6 +18,8 @@ public:
 	//id into a reference
 	sf::SoundBuffer& getRef(const std::string& soundbuffer);
 
+	void playSound(std::string bufferName, sf::Sound& sound);
+
 	//Constructor
 	AudioManager() {
 

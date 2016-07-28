@@ -19,6 +19,7 @@ public:
 
 private:
 	int selectedOption;
+	sf::Text title;
 	sf::Text start;
 	sf::Text info;
 	sf::Text options;

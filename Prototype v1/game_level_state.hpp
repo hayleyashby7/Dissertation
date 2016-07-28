@@ -18,7 +18,7 @@ private:
 	
 	Map map;
 	Gui gui;
-	AudioManager audmgr;
+	
 	std::map<std::string, std::string> mapFiles;
 	std::map<std::string, Map> mapList;
 	std::vector<Map>prevLevels;
@@ -28,8 +28,10 @@ private:
 	int maxLevel = 6;
 
 public:
+	int type = 2;
 	Player player;
 	bool gameOver;
+	bool gameWon;
 
 	void playerMove(sf::Keyboard::Key& dirKey);
 	

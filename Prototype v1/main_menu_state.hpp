@@ -12,6 +12,7 @@ private:
 	MenuGui gui;
 
 public:
+	int type = 1;
 
 	virtual void init();
 	virtual void cleanUp();

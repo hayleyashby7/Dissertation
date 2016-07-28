@@ -3,10 +3,13 @@
 
 #include "game.hpp"
 
+#include <string>
+
 
 class GameState {
 public:
 	Game* game;
+	int type = 0;
 
 	virtual void init() = 0;
 	virtual void cleanUp() = 0;

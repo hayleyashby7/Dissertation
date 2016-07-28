@@ -30,16 +30,14 @@ public:
 	bool prevLevel;
 	bool prevVisited = false;
 	bool unlocked = false;
+	bool doorOpened = false;
 
 
 	sf::Vector2f exitPos;
 	sf::Vector2f startPos;
 	
 	std::vector<Cell> mapCells;
-
-
 	std::vector<Enemy> enemies;
-
 	std::map<std::string, Tile> tileAtlas;
 
 	void loadMap(const std::string& filename, int id, unsigned int width, unsigned int height,

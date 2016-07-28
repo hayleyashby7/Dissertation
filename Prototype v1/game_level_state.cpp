@@ -12,10 +12,7 @@ void GameLevel::init() {
 	this->game->background.setTexture(this->game->texmgr.getRef("background"));
 	this->game->window.draw(this->game->background);
 	map.draw(this->game->window);
-	audmgr.loadSoundBuffer("pickup", "assets/sounds/pickup.wav");
-	audmgr.loadSoundBuffer("playerhit", "assets/sounds/playerhit.wav");
-	audmgr.loadSoundBuffer("unlockdoor", "assets/sounds/unlockdoor.wav");	
-	audmgr.loadSoundBuffer("explode", "assets/sounds/explode.wav");
+
 }
 void GameLevel::cleanUp(){}
 void GameLevel::pause(){}
@@ -33,7 +30,10 @@ void GameLevel::draw(const float dt) {
 void GameLevel::update(sf::Clock& clock) {
 	/*Check Game Over*/
 	if (this->gameOver) {
-		this->game->changeState(new MainMenu(this->game));
+		this->game->changeState(new Info(this->game, "dead"));
+	}
+	if (this->gameWon) {
+		this->game->changeState(new Info(this->game, "win"));
 	}
 
 	/*Check if progressed level*/
@@ -47,7 +47,7 @@ void GameLevel::update(sf::Clock& clock) {
 		}
 		currentLevel++;
 		if (currentLevel > maxLevel) {
-			gameOver = true;
+			gameWon = true;
 		}
 		else {	
 			bool previous = false;
@@ -95,13 +95,11 @@ void GameLevel::update(sf::Clock& clock) {
 		if (this->player.beenHit) {
 			this->gui.update("player", "Health: " + this->player.getHealth());
 			this->gui.update("key", "Keys Gathered: " + this->player.getKeys());
+			this->game->audmgr.playSound("playerhit", this->game->SFX);
 		}
 		gameOver = player.isDead();
 		this->player.beenHit = false;
 	}	
-	
-	
-
 	return;
 }
 
@@ -137,13 +135,8 @@ void GameLevel::eventHandler() {
 			if (event.key.code == sf::Keyboard::Return) {
 				if (this->player.TNT > 0) {
 					this->map.TNT(this->player);
-					this->gui.update("tnt", "TNT: " + std::to_string(this->player.TNT));
-					sf::Sound explodeSound;
-					explodeSound.setBuffer(this->audmgr.getRef("explode"));
-					explodeSound.play();
-					while (explodeSound.getStatus() == sf::Sound::Playing) {
-
-					}
+					this->gui.update("tnt", "TNT: " + std::to_string(this->player.TNT));					
+					this->game->audmgr.playSound("explode", this->game->SFX);
 					
 				}				
 			}
@@ -164,35 +157,19 @@ void GameLevel::playerMove(sf::Keyboard::Key& dirKey) {
 	}
 	if (map.keys < mapKeys) {
 		player.keys++;
-		sf::Sound pickupSound;
-		pickupSound.setBuffer(this->audmgr.getRef("pickup"));
-		pickupSound.play();
-
-		while (pickupSound.getStatus() == sf::Sound::Playing) {
-			
-		}		
+		this->game->audmgr.playSound("pickup", this->game->SFX);
 	}
 
 	if (this->player.beenHit) {
 		this->gui.update("player", "Health: " + this->player.getHealth());	
-		sf::Sound playerhit;
-		playerhit.setBuffer(this->audmgr.getRef("playerhit"));
-		playerhit.play();
-
-		while (playerhit.getStatus() == sf::Sound::Playing) {
-
-		}
+		
 	}
 
 	gameOver = player.isDead();
 	this->player.beenHit = false;
-	if (this->map.unlocked) {
-		sf::Sound door;
-		door.setBuffer(this->audmgr.getRef("unlockdoor"));
-		door.play();
-		while (door.getStatus() == sf::Sound::Playing) {
-
-		}
+	if (this->map.unlocked && !this->map.doorOpened) {
+		this->game->audmgr.playSound("unlockdoor", this->game->SFX);
+		this->map.doorOpened = true;
 	}
 
 }
@@ -203,6 +180,7 @@ GameLevel::GameLevel(Game* game) {
 	this->player = player;
 	this->game->bgMusic.openFromFile("assets/sounds/level.wav");
 	this->game->bgMusic.setVolume(25);
+	this->game->bgMusic.setLoop(true);
 	this->game->bgMusic.play();
 
 	std::random_device rd;
@@ -233,7 +211,7 @@ GameLevel::GameLevel(Game* game) {
 	map = Map(mapFiles["map1"], currentLevel, 15,15,32, game->tileAtlas, game, player, true);
 	mapList["map1"] = map;
 	this->gui.update("level", "Level: " + std::to_string(currentLevel));
-	this->gui.update("code", this->code);
+	this->gui.update("code", code);
 	this->gui.update("tnt", "TNT: " + std::to_string(this->player.TNT));
 
 }

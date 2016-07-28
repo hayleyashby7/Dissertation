@@ -13,16 +13,21 @@ void InfoGui::init(int height, int width, std::string filename) {
 	if (input.bad())
 		perror("Error reading file");
 
-	font.loadFromFile("assets/KF.ttf");
+	font.loadFromFile("assets/asst/KF.ttf");
 	int i = 0;
 	for (auto &text : this->infoText) {
 		text.setPosition(sf::Vector2f(width / 25, ((height / (infoText.size() + 5) * i))));
 		text.setFont(font);
-		text.setColor(sf::Color::White);
+		if (filename.compare("assets/files/win.txt") == 0) {
+			text.setColor(sf::Color::Yellow);
+		}
+		if (filename.compare("assets/files/dead.txt") == 0) {
+			text.setColor(sf::Color::Red);
+		}
+		else { text.setColor(sf::Color::White); }
 		text.setCharacterSize(25);
 		i++;
 	}
-
 };
 
 void InfoGui::draw(sf::RenderWindow& window) {

@@ -144,6 +144,7 @@ bool Map::checkCollision(sf::Vector2f position, Entity movingEntity) {
 		for (auto &enemy : this->enemies) {
 			if (enemy.getPosition() == movingEntity.getPosition()) {
 				movingEntity.takeDamage();
+
 			}
 
 		}

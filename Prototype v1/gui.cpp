@@ -1,6 +1,6 @@
 #include "gui.hpp"
 Gui::Gui() {
-	font.loadFromFile("assets/KF.ttf");
+	font.loadFromFile("assets/asst/KF.ttf");
 
 	this->guiText["code"] = gameCode;
 	this->guiText["level"] = levelNumber;

@@ -8,9 +8,11 @@ void MainMenu::init() {
 	this->game->window.clear(sf::Color::Black);
 	this->game->background.setTexture(this->game->texmgr.getRef("background"));
 	this->game->window.draw(this->game->background);
-	
-	
+	this->game->bgMusic.openFromFile("assets/sounds/mainmenu.wav");
+	this->game->bgMusic.setVolume(50);
+	this->game->bgMusic.play();	
 }
+
 void MainMenu::cleanUp() {}
 void MainMenu::pause() {}
 void MainMenu::resume() {}
@@ -57,13 +59,13 @@ void MainMenu::eventHandler() {
 			if (event.key.code == sf::Keyboard::Return) {
 				switch (this->gui.getSelection())
 				{
-				case 0:
+				case 1:
 					this->game->changeState(new GameLevel(this->game));
 					break;
-				case 1:
+				case 2:
 					this->game->changeState(new Info(this->game, "info"));
 					break;
-				case 2:
+				case 3:
 					this->game->changeState(new Info(this->game, "credits"));
 					break;
 				default:

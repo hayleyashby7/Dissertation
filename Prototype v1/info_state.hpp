@@ -4,6 +4,7 @@
 #include <SFML\Graphics.hpp>
 #include <string>
 #include "game_state.hpp"
+#include "main_menu_state.hpp"
 #include "game.hpp"
 #include "info_gui.hpp"
 
@@ -12,6 +13,7 @@ private:
 	sf::View infoView;
 	std::string filename;
 	InfoGui infoGui;
+	std::string type;
 
 public:	
 	virtual void init();
