@@ -169,8 +169,8 @@ void Map::restartMap(Player& player) {
 	nextLevel = false;
 }
 
-void Map::TNT(Player& player) {
-	player.TNT--;
+void Map::explode(Player& player) {
+	player.spells--;
 	sf::Vector2f playerPos = player.getPosition();
 	std::vector<sf::Vector2f> nearby;
 	nearby.push_back(playerPos);

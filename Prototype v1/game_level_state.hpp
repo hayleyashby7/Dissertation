@@ -23,9 +23,11 @@ private:
 	std::map<std::string, Map> mapList;
 	std::vector<Map>prevLevels;
 	bool noveltySearch;
+	bool start;
 	std::string code;
 	int currentLevel;
 	int maxLevel = 6;
+
 
 public:
 	int type = 2;

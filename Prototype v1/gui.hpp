@@ -15,10 +15,12 @@ public:
 	sf::Text numOfKeys;
 	sf::Text levelNumber;
 	sf::Text gameCode;
-	sf::Text TNT;
+	sf::Text spells;
+	sf::Text codeDisplay;
 	sf::Font font;
 
 	std::map<std::string, sf::Text> guiText;
+	
 	sf::Vector2f guiStart;
 
 	void draw(sf::RenderWindow& window);

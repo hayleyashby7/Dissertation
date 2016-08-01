@@ -1,8 +1,9 @@
 #include "menu_gui.hpp"
 
 void MenuGui::init(int height, int width) {
+	titleFont.loadFromFile("assets/asst/kestala.ttf");
 	font.loadFromFile("assets/asst/KF.ttf");
-	title.setString("KESTALA");
+	title.setString("Kestala");
 	start.setString("Start");
 	info.setString("How to Play");
 	credits.setString("Credits");
@@ -17,19 +18,23 @@ void MenuGui::init(int height, int width) {
 	this->menuText.push_back(credits);
 	int i = 1;
 	for (auto &text : this->menuText) {
-		text.setPosition(sf::Vector2f(width / 3, ((height / (menuText.size() + 1) * i))));
+		
 		if (i == 1) {
-			text.setFont(font);
+			text.setPosition(sf::Vector2f(width / 4, height / 100));
+			text.setFont(titleFont);
 			text.setColor(sf::Color::Color(102, 255, 255, 255));
-			text.setCharacterSize(50);
+			text.setCharacterSize(150);
 			text.setStyle(sf::Text::Italic);
+			
 		}
 		else {
+			text.setPosition(sf::Vector2f(width / 3, ((height / (menuText.size() + 1) * i))));
 			text.setFont(font);
 			text.setColor(sf::Color::White);
 			text.setCharacterSize(30);
 		}
 		i++;
+		
 	}
 	this->selectedOption = 1;
 	menuText[selectedOption].setColor(sf::Color::Red);

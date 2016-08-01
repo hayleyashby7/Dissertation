@@ -11,7 +11,7 @@ void GameLevel::init() {
 	this->game->window.clear(sf::Color::Black);
 	this->game->background.setTexture(this->game->texmgr.getRef("background"));
 	this->game->window.draw(this->game->background);
-	map.draw(this->game->window);
+
 
 }
 void GameLevel::cleanUp(){}
@@ -20,87 +20,92 @@ void GameLevel::resume(){}
 
 void GameLevel::draw(const float dt) {
 	this->game->window.clear(sf::Color::Black);	
-	this->game->window.draw(this->game->background);	
-	map.draw(this->game->window);
+	this->game->window.draw(this->game->background);
 	gui.draw(this->game->window);
-	player.draw(this->game->window);
+	if (start) {
+		map.draw(this->game->window);
+		player.draw(this->game->window);
+	}
+
 	return;
 }
 
 void GameLevel::update(sf::Clock& clock) {
-	/*Check Game Over*/
-	if (this->gameOver) {
-		this->game->changeState(new Info(this->game, "dead"));
-	}
-	if (this->gameWon) {
-		this->game->changeState(new Info(this->game, "win"));
-	}
+	if (start) {
+		/*Check Game Over*/
+		if (this->gameOver) {
+			this->game->changeState(new Info(this->game, "dead"));
+		}
+		if (this->gameWon) {
+			this->game->changeState(new Info(this->game, "win"));
+		}
 
-	/*Check if progressed level*/
-	if (this->map.nextLevel) {
-		this->map.prevVisited = true;
-		if (prevLevels.size() >= this->map.id) {
-			prevLevels[currentLevel - 1] = this->map;
-		}
-		else {
-			prevLevels.push_back(this->map);
-		}
-		currentLevel++;
-		if (currentLevel > maxLevel) {
-			gameWon = true;
-		}
-		else {	
-			bool previous = false;
-			for (auto& oldMap : prevLevels) {
-				if (oldMap.prevVisited && oldMap.id == currentLevel) {
-					this->map = oldMap;
-					this->map.restartMap(player);
-					previous = true;
-					break;
-				}
-			}				
-			if (!previous) {
-				std::string file = "map" + std::to_string(currentLevel);
-				map = Map(mapFiles[file], currentLevel, 15, 15, 32, game->tileAtlas, game, player);
-				mapList[file] = map;
-				this->gui.update("level", "Level: " + std::to_string(currentLevel));
+		/*Check if progressed level*/
+		if (this->map.nextLevel) {
+			this->map.prevVisited = true;
+			if (prevLevels.size() >= this->map.id) {
+				prevLevels[currentLevel - 1] = this->map;
 			}
-			
-		}
-		map.nextLevel = false;		
-	}
+			else {
+				prevLevels.push_back(this->map);
+			}
+			currentLevel++;
+			if (currentLevel > maxLevel) {
+				gameWon = true;
+			}
+			else {
+				bool previous = false;
+				for (auto& oldMap : prevLevels) {
+					if (oldMap.prevVisited && oldMap.id == currentLevel) {
+						this->map = oldMap;
+						this->map.restartMap(player);
+						previous = true;
+						break;
+					}
+				}
+				if (!previous) {
+					std::string file = "map" + std::to_string(currentLevel);
+					map = Map(mapFiles[file], currentLevel, 15, 15, 32, game->tileAtlas, game, player);
+					mapList[file] = map;
+					this->gui.update("level", "Level: " + std::to_string(currentLevel));
+				}
 
-	/*Check if regressed level*/
-	if (this->map.prevLevel) {
-		this->map.prevVisited = true;
-		if (prevLevels.size() >= currentLevel) {
-			prevLevels[currentLevel - 1] = this->map;
+			}
+			map.nextLevel = false;
 		}
-		else {
-			prevLevels.push_back(this->map);
-		}		
-		if (currentLevel > 1) {
-			currentLevel--;
-		}
-		map = prevLevels[currentLevel-1];
-		this->gui.update("level", "Level: " + std::to_string(currentLevel));
-		map.returnMap(player);
-		
-	}
 
-	/*Enemy movement*/
-	float dt = clock.getElapsedTime().asSeconds();
-	if (dt > this->game->gameSpeed) {
-		this->map.enemyMove(player);
-		if (this->player.beenHit) {
-			this->gui.update("player", "Health: " + this->player.getHealth());
-			this->gui.update("key", "Keys Gathered: " + this->player.getKeys());
-			this->game->audmgr.playSound("playerhit", this->game->SFX);
+		/*Check if regressed level*/
+		if (this->map.prevLevel) {
+			this->map.prevVisited = true;
+			if (prevLevels.size() >= currentLevel) {
+				prevLevels[currentLevel - 1] = this->map;
+			}
+			else {
+				prevLevels.push_back(this->map);
+			}
+			if (currentLevel > 1) {
+				currentLevel--;
+			}
+			map = prevLevels[currentLevel - 1];
+			this->gui.update("level", "Level: " + std::to_string(currentLevel));
+			map.returnMap(player);
+
 		}
-		gameOver = player.isDead();
-		this->player.beenHit = false;
-	}	
-	return;
+
+		/*Enemy movement*/
+		float dt = clock.getElapsedTime().asSeconds();
+		if (dt > this->game->gameSpeed) {
+			this->map.enemyMove(player);
+			if (this->player.beenHit) {
+				this->gui.update("player", "Health: " + this->player.getHealth());
+				this->gui.update("key", "Keys Gathered: " + this->player.getKeys());
+				this->game->audmgr.playSound("playerhit", this->game->SFX);
+			}
+			gameOver = player.isDead();
+			this->player.beenHit = false;
+		}
+		return;
+	}
 }
 
 void GameLevel::eventHandler() {
@@ -126,6 +131,11 @@ void GameLevel::eventHandler() {
 				this->game->goBackState();
 				break;
 			}
+			if (event.key.code == sf::Keyboard::Y) {
+				start = true;
+				this->gui.codeDisplay.setString("");
+				break;
+			}
 
 			if (event.key.code == sf::Keyboard::W || event.key.code == sf::Keyboard::A ||
 				event.key.code == sf::Keyboard::S || event.key.code == sf::Keyboard::D) {
@@ -133,9 +143,9 @@ void GameLevel::eventHandler() {
 				this->playerMove(k);				
 			}	
 			if (event.key.code == sf::Keyboard::Return) {
-				if (this->player.TNT > 0) {
-					this->map.TNT(this->player);
-					this->gui.update("tnt", "TNT: " + std::to_string(this->player.TNT));					
+				if (this->player.spells > 0) {
+					this->map.explode(this->player);
+					this->gui.update("spells", "Spells: " + std::to_string(this->player.spells));					
 					this->game->audmgr.playSound("explode", this->game->SFX);
 					
 				}				
@@ -177,6 +187,7 @@ void GameLevel::playerMove(sf::Keyboard::Key& dirKey) {
 GameLevel::GameLevel(Game* game) {
 	player = Player(sf::Vector2f(0, 0), game->texmgr.getRef("player"));
 	this->game = game;
+	this->start = false;
 	this->player = player;
 	this->game->bgMusic.openFromFile("assets/sounds/level.wav");
 	this->game->bgMusic.setVolume(25);
@@ -189,10 +200,10 @@ GameLevel::GameLevel(Game* game) {
 
 	noveltySearch = bd(generator);
 	if (noveltySearch) {
-		this->code = "Code: TC_NS";
+		this->code = "CODE: A56B2";
 	}
 	else {
-		this->code = "Code: TC_FF";
+		this->code = "CODE: F98T3";
 	}
 
 	for (int i = 1; i < 7; i++) {
@@ -212,6 +223,6 @@ GameLevel::GameLevel(Game* game) {
 	mapList["map1"] = map;
 	this->gui.update("level", "Level: " + std::to_string(currentLevel));
 	this->gui.update("code", code);
-	this->gui.update("tnt", "TNT: " + std::to_string(this->player.TNT));
+	this->gui.update("spells", "Spells: " + std::to_string(this->player.spells));
 
 }

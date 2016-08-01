@@ -50,7 +50,7 @@ public:
 	void leaveMap(bool& change);
 	void returnMap(Player& player);
 	void restartMap(Player& player);
-	void TNT(Player& player);
+	void explode(Player& player);
 
 	void draw(sf::RenderWindow& window);
 

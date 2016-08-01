@@ -26,7 +26,7 @@ private:
 	sf::Text credits;
 
 	sf::Font font;
-
+	sf::Font titleFont;
 	std::vector<sf::Text> menuText;
 
 
